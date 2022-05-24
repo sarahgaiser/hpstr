@@ -1,0 +1,57 @@
+{
+     "chi2NdfTop_lt" : {
+        "cut"  : 15,
+        "id"   : 0,
+        "info" : "e^{-} Track #chi^{2}/ndf < 10"
+    },
+    "chi2NdfBot_lt" : {
+        "cut"  : 15,
+        "id"   : 1,
+        "info" : "e^{+} Track #chi^{2}/ndf < 10"
+    }, 
+	"n2DhitsTop_gt" :  {
+        "cut"  : 10,
+        "id"   : 2,
+        "info" : "e^{-} Track n2d Hits >=10"
+    },
+    "n2DhitsBot_gt" :  {
+        "cut"  : 10,
+        "id"   : 3,
+        "info" : "p^{+} Track n2d Hits >=10"
+    },      
+    "pTop_lt" : {
+        "cut" : 2.8,
+        "id"  : 4,
+        "info" : "p_{top} < 75%E_{beam} [GeV]"
+    },
+	"pBot_lt" : {
+        "cut" : 2.8,
+        "id"  : 5,
+        "info" : "p_{bot} < 75%E_{beam} [GeV]"
+    },
+	"chi2unc_lt" : {
+        "cut"   : 10,
+        "id"    : 6,
+        "info"  : "#chi^{2}_{unc} < 10"
+    },                
+	"pDiff_lt" : {
+        "cut" : 0.8,
+        "id"  : 7,
+        "info" : "| pDiff | < 0.8 [GeV]"
+    },    
+ 	"pSum_gt" : {
+        "cut" : 3.4,
+        "id"  : 8,
+        "info" : "pSum > 3.4 [GeV]"
+    },    
+	"pSum_lt" : {
+        "cut" : 4,
+        "id"  : 9,
+        "info" : "pSum < 4 [GeV]"
+    },
+	"time_diff_lt" : {
+        "cut" : 4,
+        "id"  : 10,
+        "info" : "|#Deltat| < 4 [ns]"
+    }
+}

@@ -50,11 +50,15 @@ mollerAna.parameters["beamE"] = base.beamE[str(options.year)]
 mollerAna.parameters["isData"] = options.isData
 
 if options.year == 2021:
-    mollerAna.parameters["trackSelectionjson"] = os.environ['HPSTR_BASE']+'/analysis/selections/mollerTrackSelection_2021.json'
+    mollerAna.parameters["trackSelectionjson"] = os.environ['HPSTR_BASE']+'/analysis/selections/2021/moller/mollerTrackSelection_2021.json'
+    mollerAna.parameters["vertexSelectionjson"] = os.environ['HPSTR_BASE']+'/analysis/selections/2021/moller/mollerVertexSelection_2021.json'
+    mollerAna.parameters["histTrackCfg"] = os.environ['HPSTR_BASE']+'/analysis/plotconfigs/moller/mollerTrackAnalysis_2021.json'
+    mollerAna.parameters["histVertexCfg"] = os.environ['HPSTR_BASE']+'/analysis/plotconfigs/moller/mollerVertexAnalysis_2021.json'  
 elif options.year == 20211920:
-    mollerAna.parameters["trackSelectionjson"] = os.environ['HPSTR_BASE']+'/analysis/selections/mollerTrackSelection_20211920.json'
-    
-mollerAna.parameters["histCfg"] = os.environ['HPSTR_BASE']+'/analysis/plotconfigs/mollerAnalysis/mollerAnalysis.json'    
+    mollerAna.parameters["trackSelectionjson"] = os.environ['HPSTR_BASE']+'/analysis/selections/2021/moller/mollerTrackSelection_20211920.json'
+    mollerAna.parameters["vertexSelectionjson"] = os.environ['HPSTR_BASE']+'/analysis/selections/2021/moller/mollerVertexSelection_20211920.json'
+    mollerAna.parameters["histTrackCfg"] = os.environ['HPSTR_BASE']+'/analysis/plotconfigs/moller/mollerTrackAnalysis_20211920.json'
+    mollerAna.parameters["histVertexCfg"] = os.environ['HPSTR_BASE']+'/analysis/plotconfigs/moller/mollerVertexAnalysis_20211920.json'     
 
 # Sequence which the processors will run.
 p.sequence = [mollerAna]
