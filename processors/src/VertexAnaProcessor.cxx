@@ -865,10 +865,24 @@ bool VertexAnaProcessor::process(IEvent* ievent) {
             //L1 requirement
             if (!_reg_vtx_selectors[region]->passCutEq("L1Requirement_eq",(int)(foundL1ele&&foundL1pos),weight))
                 continue;
+            if (!_reg_vtx_selectors[region]->passCutEq("noLRequirement_eq",1,weight))
+		continue;
 
             //L2 requirement
             if (!_reg_vtx_selectors[region]->passCutEq("L2Requirement_eq",(int)(foundL2ele&&foundL2pos),weight))
                 continue;
+
+	    //L1L2
+	    if (!_reg_vtx_selectors[region]->passCutEq("L1L2Requirement_eq",(int)(foundL1pos&&(foundL2ele&&!foundL1ele)),weight))
+		continue;
+
+	    //L2L1
+	    if (!_reg_vtx_selectors[region]->passCutEq("L2L1Requirement_eq",(int)(foundL1ele&&(foundL2pos&&!foundL1pos)), weight))
+		continue;
+
+            //L2L2
+            if (!_reg_vtx_selectors[region]->passCutEq("L2L2Requirement_eq",(int)((foundL2ele&&!foundL1ele)&&(foundL2pos&&!foundL1pos)), weight))
+	    	continue;
 
             //L1 requirement for positron
             if (!_reg_vtx_selectors[region]->passCutEq("L1PosReq_eq",(int)(foundL1pos),weight))

@@ -1,21 +1,21 @@
 {
-    "eleTrkTime_lt" : {
-        "cut"  : 6.0,
-        "id"   : 0,
-        "info" : "|e^{-} Track Time| < 6.0 ns"
-    },
     "eleTrkChi2Ndf_lt" : {
         "cut"  : 30,
-        "id"   : 1,
+        "id"   : 0,
         "info" : "e^{-} Track #chi^{2}/ndf < 30"
     },
     "posTrkChi2Ndf_lt" : {
         "cut"  : 30,
-        "id"   : 2,
+        "id"   : 1,
         "info" : "e^{+} Track #chi^{2}/ndf < 30"
     },
     "eleMom_lt" : {
-        "cut" : 2.9,
+        "cut" : 3.0,
+        "id"  : 2,
+        "info" : "p e^{-} < 3 GeV"
+    },
+    "eleMom_gt" : {
+        "cut" : 0.2,
         "id"  : 3,
         "info" : "p e^{-} < 2.9 GeV"
     },

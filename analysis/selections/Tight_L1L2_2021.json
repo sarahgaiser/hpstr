@@ -4,10 +4,10 @@
         "id"   : 0,
         "info" : "#chi^{2}_{unc}<20"
     },
-    "noLRequirement_eq"  : {
+    "L1L2Requirement_eq"  : {
         "cut"  : 1,
         "id"   : 1,
-        "info" : "no L1L1"
+        "info" : "L1L2"
     },
     "pSum_lt"  : {
         "cut"  : 3.8,
@@ -24,4 +24,5 @@
         "id"   : 4,
         "info" : "N_{vtx}=1"
     }
+
 }
