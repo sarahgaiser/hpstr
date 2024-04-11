@@ -501,7 +501,6 @@ bool utils::addRawInfoTo3dHit(TrackerHit* tracker_hit,
             delete rawHit;
 
     }
-
     tracker_hit->setRawCharge(rawcharge);
     tracker_hit->setVolume(volume);
     tracker_hit->setLayer(layer);
