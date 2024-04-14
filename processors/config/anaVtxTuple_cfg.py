@@ -36,7 +36,7 @@ vtxana = HpstrConf.Processor('vtxana', 'VertexAnaProcessor')
 #   Processor Configuration   #
 ###############################
 #Vertex Analysis
-vtxana.parameters["debug"] = 0
+vtxana.parameters["debug"] = 1
 vtxana.parameters["anaName"] = "vtxana"
 vtxana.parameters["tsColl"] = "TSBank"
 #vtxana.parameters["trkColl"] = "GBLTracks"
