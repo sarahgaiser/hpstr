@@ -145,6 +145,7 @@ bool FinalStateParticleProcessor::process(IEvent* ievent) {
                 track->addHit(tracker_hit);
                 hits_.push_back(tracker_hit);
                 rawSvthitsOn3d.clear();
+//		if (tracker_hit->getLayer()==6 || tracker_hit->getLayer()==13) std::cout << "LAYER: " << tracker_hit->getLayer() << std::endl;
                 // loop on j>i tracks
             }
             fsp->setTrack(track);
