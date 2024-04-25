@@ -10,9 +10,9 @@
         "info" : "e^{+} Track #chi^{2}/ndf < 30"
     },
     "eleMom_lt" : {
-        "cut" : 3.6,
+        "cut" : 3.64,
         "id"  : 2,
-        "info" : "p_e^{-} < 3.6 [GeV]"
+        "info" : "p_e^{-} < 0.8 * Ebeam"
     },
     "eleMom_gt" : {
         "cut" : 0.1,
