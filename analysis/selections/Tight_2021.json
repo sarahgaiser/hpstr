@@ -1,32 +1,17 @@
 {
-    "chi2unc_lt" : {
-        "cut"  : 20.0,
+    "L1Requirement_eq"  : {
+        "cut"  : 1,
         "id"   : 0,
-        "info" : "#chi^{2}_{unc}<20"
-    },
-    "eleN2Dhits_gt" :  {
-        "cut"  : 10,
-        "id"   : 1,
-        "info" : "e^{-} Track n2d Hits >=10"
-    },
-    "posN2Dhits_gt" :  {
-        "cut"  : 10,
-        "id"   : 2,
-        "info" : "p^{+} Track n2d Hits >=10"
+        "info" : "L1L1"
     },
     "pSum_gt"  : {
         "cut"  : 0.5,
-        "id"   : 3,
+        "id"   : 1,
         "info" : "P_{e^{-}} + P_{e^{+}}>0.5 GeV"
-    },
-    "deltaZ_lt"  : {
-        "cut"  : 10.0,
-        "id"   : 4,
-        "info" : "|#Delta Z| < 10"
     },
     "nVtxs_eq" : {
         "cut"  : 1,
-        "id"   : 5,
+        "id"   : 3,
         "info" : "N_{vtx}=1"
     }
 }
