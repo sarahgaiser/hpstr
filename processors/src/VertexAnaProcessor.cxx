@@ -215,6 +215,9 @@ void VertexAnaProcessor::initialize(TTree* tree) {
                 _reg_tuples[regname]->addVariable("L1hitCode");
                 _reg_tuples[regname]->addVariable("L2hitCode");
             }
+
+            // event time
+            _reg_tuples[regname]->addVariable("event_time");
         }
 
         _regions.push_back(regname);
@@ -249,6 +252,7 @@ bool VertexAnaProcessor::process(IEvent* ievent) {
     HpsEvent* hps_evt = (HpsEvent*) ievent;
     double weight = 1.;
     int run_number = evth_->getRunNumber();
+    int event_time = evth_->getEventTime();
     int closest_run;
     if(!bpc_configs_.empty()){
         for(auto run : bpc_configs_.items()){
@@ -860,6 +864,13 @@ bool VertexAnaProcessor::process(IEvent* ievent) {
             if (!_reg_vtx_selectors[region]->passCutGt("minVtxMom_gt",(ele_mom+pos_mom).Mag(),weight))
                 continue;
 
+            // Event Time
+            if (!_reg_vtx_selectors[region]->passCutLt("eventTime_lt",event_time%500,weight))
+                continue;
+
+            if (!_reg_vtx_selectors[region]->passCutGt("eventTime_gt",event_time%500,weight))
+                continue;
+    
             //END PRESELECTION CUTS
 
             //L1 requirement
@@ -1395,6 +1406,8 @@ bool VertexAnaProcessor::process(IEvent* ievent) {
                 _reg_tuples[region]->setVariableValue("unc_vtx_pos_track_px", pos_trk_gbl->getMomentum().at(0));
                 _reg_tuples[region]->setVariableValue("unc_vtx_pos_track_py", pos_trk_gbl->getMomentum().at(1));
                 _reg_tuples[region]->setVariableValue("unc_vtx_pos_track_pz", pos_trk_gbl->getMomentum().at(2));
+
+                _reg_tuples[region]->setVariableValue("event_time", event_time%500);
 
                 _reg_tuples[region]->fill();
             }
