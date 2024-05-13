@@ -78,7 +78,8 @@ if (options.year == 2019):
 #if (options.year == 2021):
 #    vtxana.parameters["regionDefinitions"] = [RegionPath+'Tight_2021.json', RegionPath+'Tight_pTop_2021.json', RegionPath+'Tight_pBot_2021.json']
 if (options.year == 2021):
-    vtxana.parameters["regionDefinitions"] = [RegionPath+'Tight_2021.json', RegionPath+'Tight_L1L1_2021.json', RegionPath+'Tight_L1L2_2021.json', RegionPath+'Tight_L2L1_2021.json', RegionPath+'Tight_L2L2_2021.json']
+    # vtxana.parameters["regionDefinitions"] = [RegionPath+'Tight_2021.json', RegionPath+'Tight_L1L1_2021.json', RegionPath+'Tight_L1L2_2021.json', RegionPath+'Tight_L2L1_2021.json', RegionPath+'Tight_L2L2_2021.json']
+    vtxana.parameters["regionDefinitions"] = [RegionPath+'vtxSelection_inTime40.json', RegionPath+'vtxSelection_inTime20.json', RegionPath+'Tight_L1L1_2021.json', RegionPath+'Tight_L1L1_inTime40_2021.json', RegionPath+'Tight_L1L1_inTime20_2021.json']
 
 
 # Sequence which the processors will run.
