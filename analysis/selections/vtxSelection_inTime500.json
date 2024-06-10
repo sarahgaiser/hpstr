@@ -1,0 +1,7 @@
+{
+    "eventTime_lt" : {
+        "cut"  : 500.0,
+        "id"   : 0,
+        "info" : "t_{event}%500<500"
+    }
+}
