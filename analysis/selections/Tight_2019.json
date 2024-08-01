@@ -9,14 +9,19 @@
         "id"   : 1,
         "info" : "L1L1"
     },
+    "pSum_lt": {
+	"cut"  : 5.0,
+	"id"   : 2,
+	"info" : "P_{e^{-}} + P_{e^{+}}<5.0 GeV"
+    },
     "pSum_gt"  : {
-        "cut"  : 2.0,
-        "id"   : 2,
-        "info" : "P_{e^{-}} + P_{e^{+}}>2.0 GeV"
+        "cut"  : 3.8,
+        "id"   : 3,
+        "info" : "P_{e^{-}} + P_{e^{+}}>3.8 GeV"
     },
     "nVtxs_eq" : {
         "cut"  : 1,
-        "id"   : 3,
+        "id"   : 4,
         "info" : "N_{vtx}=1"
     }
 

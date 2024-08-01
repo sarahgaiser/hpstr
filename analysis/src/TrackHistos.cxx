@@ -140,6 +140,7 @@ void TrackHistos::Fill1DVertex(Vertex* vtx,
     Fill2DHisto("pos_trkClusX_tanL_hh", pos_trk->getTanLambda(), pos_trk->getPositionAtEcal()[0] - posClus.getPosition()[0], weight);
     Fill2DHisto("ele_trkClusX_clusX_hh", eleClus.getPosition()[0],ele_trk->getPositionAtEcal()[0] - eleClus.getPosition()[0], weight);
     Fill2DHisto("pos_trkClusX_clusX_hh", posClus.getPosition()[0], pos_trk->getPositionAtEcal()[0] - posClus.getPosition()[0], weight);
+    Fill2DHisto("ele_pos_time_hh", ele_trk->getTrackTime(), pos_trk->getTrackTime(), weight);
     for(int i = 0; i < ele_trk->getHitLayers().size(); i++)
     {
         Fill2DHisto("ele_trkClusX_hitLay_hh", (float) ele_trk->getHitLayers().at(i), ele_trk->getPositionAtEcal()[0] - eleClus.getPosition()[0], weight);
@@ -217,9 +218,9 @@ void TrackHistos::Fill2DTrack(Track* track, float weight, const std::string& trk
         Fill2DHisto(trkname+"z0_vs_phi0_hh",track->getPhi(),z0,weight);
         Fill2DHisto(trkname+"z0_vs_tanlambda_hh",track->getTanLambda(),z0,weight);
                 
-        Fill2DHisto(trkname+"TanLambda_vs_Phi_hh"      ,track->getPhi()  , track->getTanLambda()       ,weight);
-        Fill2DHisto(trkname+"p_vs_Phi_hh"      ,track->getPhi()  , track->getP()       ,weight);
-        Fill2DHisto(trkname+"p_vs_TanLambda_hh"      ,track->getTanLambda()  , track->getP()       ,weight);
+        Fill2DHisto(trkname+"tanlambda_vs_Phi_hh", track->getPhi(), track->getTanLambda(), weight);
+        Fill2DHisto(trkname+"p_vs_Phi_hh", track->getPhi(), track->getP(), weight);
+        Fill2DHisto(trkname+"p_vs_tanlambda_hh", track->getTanLambda(), track->getP(), weight);
 
 
     }
