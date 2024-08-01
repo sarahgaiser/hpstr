@@ -12,17 +12,17 @@
     "eleMom_lt" : {
         "cut" : 3.0,
         "id"  : 2,
-        "info" : "p e^{-} < 3 GeV"
+        "info" : "p e^{-} < 0.8 * Ebeam"
     },
     "eleMom_gt" : {
-        "cut" : 0.2,
+        "cut" : 0.4,
         "id"  : 3,
-        "info" : "p_e^{-} > 0.2 [GeV]"
+        "info" : "p_e^{-} > 0.1 [GeV]"
     },
     "posMom_gt" : {
-        "cut" : 0.2,
+        "cut" : 0.4,
         "id"  : 4,
-        "info" : "p_e^{+} > 0.2 [GeV]"
+        "info" : "p_e^{+} > 0.1 [GeV]"
     },
     "eleN2Dhits_gt" : {
         "cut"   : 10,
@@ -34,14 +34,9 @@
         "id"    : 6,
         "info"  : "e^{+} Track n2d Hits >= 10"
     },
-    "chi2unc_lt" : {
-        "cut"   : 20,
-        "id"    : 7,
-        "info"  : "#chi^{2}_{unc} < 20"
-    },
     "maxVtxMom_lt" : {
-        "cut" : 5.6,
-        "id"  : 8,
-        "info" : "p_{vtx} < 5.6 [GeV]"
+        "cut" : 7.0,
+        "id"  : 7,
+        "info" : "p_{vtx} < 7.0 [GeV]"
     }
 }

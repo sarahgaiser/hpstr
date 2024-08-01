@@ -418,6 +418,9 @@ bool VertexAnaProcessor::process(IEvent* ievent) {
         if (!vtxSelector->passCutLt("eleTrkTime_lt",fabs(ele_trk->getTrackTime()),weight))
             continue;
 
+	if (!vtxSelector->passCutGt("eleTrkTime_gt",fabs(ele_trk->getTrackTime()),weight))
+            continue;
+
         //Pos Track Time
         if (!vtxSelector->passCutLt("posTrkTime_lt",fabs(pos_trk->getTrackTime()),weight))
             continue;
@@ -738,6 +741,9 @@ bool VertexAnaProcessor::process(IEvent* ievent) {
             }
             //Ele Track Time
             if (!_reg_vtx_selectors[region]->passCutLt("eleTrkTime_lt",fabs(ele_trk_gbl->getTrackTime()),weight))
+                continue;
+
+	    if (!_reg_vtx_selectors[region]->passCutGt("eleTrkTime_gt",fabs(ele_trk_gbl->getTrackTime()),weight))
                 continue;
 
             //Pos Track Time
