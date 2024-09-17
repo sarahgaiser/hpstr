@@ -62,7 +62,6 @@ Particle* utils::buildParticle(EVENT::ReconstructedParticle* lc_particle,
 
     if (!lc_particle) 
         return nullptr;
-
     Particle* part = new Particle();
     // Set the charge of the HpsParticle    
     part->setCharge(lc_particle->getCharge());
@@ -89,7 +88,7 @@ Particle* utils::buildParticle(EVENT::ReconstructedParticle* lc_particle,
     if (lc_particle->getTracks().size()>0)
     {
         Track * trkPtr = utils::buildTrack(lc_particle->getTracks()[0],trackstate_location, gbl_kink_data, track_data);
-        part->setTrack(trkPtr);
+        if (trkPtr) part->setTrack(trkPtr);
         delete trkPtr;
     }
 
@@ -165,7 +164,7 @@ Track* utils::buildTrack(EVENT::Track* lc_track,
 
      //TrackState Location map
      std::map<std::string, int> trackstateLocationMap_ = {
-        {"", EVENT::TrackState::AtIP},
+        {"AtIP", EVENT::TrackState::AtIP},
         {"AtTarget", EVENT::TrackState::LastLocation}
      };
 
@@ -182,7 +181,7 @@ Track* utils::buildTrack(EVENT::Track* lc_track,
 
     Track* track = new Track();
     //If using track AtIP, get params from lc_track
-    if (loc == trackstateLocationMap_[""]){
+    if (loc == trackstateLocationMap_["AtIP"]){
         // Set the track parameters
         track->setTrackParameters(lc_track->getD0(), 
                 lc_track->getPhi(), 
@@ -199,7 +198,7 @@ Track* utils::buildTrack(EVENT::Track* lc_track,
         // If track state doesn't exist, no track returned
         const EVENT::TrackState* ts = lc_track->getTrackState(loc);
         if (ts == nullptr){
-            return nullptr;
+	    return nullptr;
         }
         // Set the track parameters using trackstate
         track->setTrackParameters(ts->getD0(), 
