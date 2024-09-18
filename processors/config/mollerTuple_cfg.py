@@ -6,6 +6,9 @@ from baseConfig import bfield
 base.parser.add_argument("-TS", "--trackstate", type=str, dest="trackstate",
                          help="Specify Track State | 'AtECal', 'AtTarget'. Default is origin ",  metavar="trackstate", default="AtTarget")
 
+base.parser.add_argument("-r", "--rawHits", type=int, dest="rawHits",
+                         help="Keep raw svt hits: 1=yes", metavar="rawHits", default=0)
+
 options = base.parser.parse_args()
 
 # Use the input file to set the output file name
@@ -29,8 +32,11 @@ p.add_library("libprocessors")
 #          Processors         #
 ###############################
 header = HpstrConf.Processor('header', 'EventProcessor')
+track = HpstrConf.Processor('track', 'TrackingProcessor')
 vtx = HpstrConf.Processor('vtx', 'VertexProcessor')
+cvtx = HpstrConf.Processor('cvtx', 'VertexProcessor')
 mcpart = HpstrConf.Processor('mcpart', 'MCParticleProcessor')
+fsp = HpstrConf.Processor('fps', 'FinalStateParticleProcessor')
 
 ###############################
 #   Processor Configuration   #
@@ -45,13 +51,23 @@ header.parameters["vtpCollRoot"] = "VTPBank"
 header.parameters["tsCollLcio"] = "TSBank"
 header.parameters["tsCollRoot"] = "TSBank"
 
+# Tracking
+track.parameters["debug"] = 0
+track.parameters["trkCollLcio"] = 'KalmanFullTracks'
+track.parameters["trkCollRoot"] = 'KalmanFullTracks'
+track.parameters["kinkRelCollLcio"] = ''
+track.parameters["trkRelCollLcio"] = 'KFTrackDataRelations'
+track.parameters["trkhitCollRoot"] = 'SiClustersOnTrack'
+track.parameters["hitFitsCollLcio"] = 'SVTFittedRawTrackerHits'
+track.parameters["rawhitCollRoot"] = 'SVTRawHitsOnTrack_KF'
+
+track.parameters["bfield"] = bfield[str(options.year)]
+
 # Vertex
-vtx.parameters["debug"] = 0
+vtx.parameters["debug"] = 9
 vtx.parameters["vtxCollLcio"] = 'UnconstrainedMollerVertices'
 vtx.parameters["vtxCollRoot"] = 'UnconstrainedMollerVertices'
-#vtx.parameters["vtxCollLcio"] = 'TargetConstrainedMollerVertices'
-#vtx.parameters["vtxCollRoot"] = 'TargetConstrainedMollerVertices'
-#vtx.parameters["partCollRoot"] = 'ParticlesOnMollerVertices'
+vtx.parameters["partCollRoot"] = 'ParticlesOnMollerVertices'
 vtx.parameters["kinkRelCollLcio"] = ''
 vtx.parameters["trkRelCollLcio"] = 'KFTrackDataRelations'
 vtx.parameters["trkhitCollRoot"] = ''
@@ -62,16 +78,50 @@ if options.trackstate == "":
         vtx.parameters["bfield"] = bfield[str(options.year)]
 vtx.parameters["mcPartRelLcio"] = 'SVTTrueHitRelations'
 
+# Vertex
+cvtx.parameters["debug"] = 0
+cvtx.parameters["vtxCollLcio"] = 'TargetConstrainedMollerVertices'
+cvtx.parameters["vtxCollRoot"] = 'TargetConstrainedMollerVertices'
+cvtx.parameters["partCollRoot"] = 'ParticlesOnMollerVertices'
+cvtx.parameters["kinkRelCollLcio"] = ''
+cvtx.parameters["trkRelCollLcio"] = 'KFTrackDataRelations'
+cvtx.parameters["trkhitCollRoot"] = ''
+cvtx.parameters["hitFitsCollLcio"] = 'SVTFittedRawTrackerHits'
+cvtx.parameters["rawhitCollRoot"] = ''
+cvtx.parameters["trackStateLocation"] = options.trackstate
+if options.trackstate == "":
+        cvtx.parameters["bfield"] = bfield[str(options.year)]
+cvtx.parameters["mcPartRelLcio"] = 'SVTTrueHitRelations'
+
 # MCParticle
 mcpart.parameters["debug"] = 0
 mcpart.parameters["mcPartCollLcio"] = 'MCParticle'
 mcpart.parameters["mcPartCollRoot"] = 'MCParticle'
+
+#FinalStateParticleProcessor
+fsp.parameters["debug"] = 0 
+fsp.parameters["fspCollLcio"] = "FinalStateParticles_KF" 
+fsp.parameters["fspCollRoot"] = "FinalStateParticles_KF"
+fsp.parameters["kinkRelCollLcio"] = ""
+fsp.parameters["trkRelCollLcio"] = "KFTrackDataRelations"
+
+if(options.rawHits==1):
+    fsp.parameters["trkhitCollRoot"] = "fspOnTrackHits"
+    fsp.parameters["rawhitCollRoot"] = "fspOnTrackRawHits"
+    fsp.parameters["hitFitsCollLcio"] = "SVTFittedRawTrackerHits"
+else:
+    fsp.parameters["trkhitCollRoot"] = "fspOnTrackHits"
+    fsp.parameters["rawhitCollRoot"] = ""
+    fsp.parameters["hitFitsCollLcio"] = ""
+
 
 sequence = [header, vtx]
 
 # If MC, get MCParticles
 if (not options.isData):
     sequence.append(mcpart)
+
+#sequence.append(fsp)
 
 p.sequence = sequence
 
