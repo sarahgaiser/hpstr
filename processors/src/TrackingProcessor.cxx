@@ -235,7 +235,6 @@ bool TrackingProcessor::process(IEvent* ievent) {
         track->setNShared(SharedHits[itrack].size());
         track->setSharedLy0(SharedHitsLy0[itrack]);
         track->setSharedLy1(SharedHitsLy1[itrack]);
-        
 
         //Get the truth tracks relations:
         

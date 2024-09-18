@@ -151,6 +151,7 @@ bool VertexProcessor::process(IEvent* ievent) {
         {
             if (debug_ > 0) std::cout << "VertexProcessor: Build particle" << std::endl;
             Particle * part = utils::buildParticle(lc_part,trackStateLocation_, gbl_kink_data, track_data);
+	    if (debug_ > 0) std::cout << "VertexProcessor: Build particle DONE" << std::endl;
             //=============================================
             if (lc_part->getTracks().size()>0){
                 EVENT::Track* lc_track = static_cast<EVENT::Track*>(lc_part->getTracks()[0]);

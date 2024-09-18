@@ -1,27 +1,27 @@
 {
-    "chi2unc_lt" : {
+    "eventTime_lt" : {
         "cut"  : 20.0,
         "id"   : 0,
-        "info" : "#chi^{2}_{unc}<20"
+        "info" : "t_{event}%500<20"
     },
     "L1Requirement_eq"  : {
         "cut"  : 1,
-        "id"   : 1,
+        "id"   : 2,
         "info" : "L1L1"
     },
     "pSum_lt"  : {
-        "cut"  : 4.0,
-        "id"   : 2,
-        "info" : "P_{e^{-}} + P_{e^{+}}<4.0 GeV"
+        "cut"  : 3.8,
+        "id"   : 3,
+        "info" : "P_{e^{-}} + P_{e^{+}}<3.8 GeV"
     },
     "pSum_gt"  : {
         "cut"  : 3.0,
-        "id"   : 3,
+        "id"   : 4,
         "info" : "P_{e^{-}} + P_{e^{+}}>3.0 GeV"
     },
     "nVtxs_eq" : {
         "cut"  : 1,
-        "id"   : 4,
+        "id"   : 5,
         "info" : "N_{vtx}=1"
     }
 }

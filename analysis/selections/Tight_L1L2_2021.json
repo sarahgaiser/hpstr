@@ -4,15 +4,15 @@
         "id"   : 0,
         "info" : "#chi^{2}_{unc}<20"
     },
-    "L1Requirement_eq"  : {
+    "L1L2Requirement_eq"  : {
         "cut"  : 1,
         "id"   : 1,
-        "info" : "L1L1"
+        "info" : "L1L2"
     },
     "pSum_lt"  : {
-        "cut"  : 4.0,
+        "cut"  : 3.8,
         "id"   : 2,
-        "info" : "P_{e^{-}} + P_{e^{+}}<4.0 GeV"
+        "info" : "P_{e^{-}} + P_{e^{+}}<3.8 GeV"
     },
     "pSum_gt"  : {
         "cut"  : 3.0,
@@ -24,4 +24,5 @@
         "id"   : 4,
         "info" : "N_{vtx}=1"
     }
+
 }
