@@ -407,7 +407,7 @@ bool TriggerParametersExtractionMollerSingleTriggerAnaProcessor::process(IEvent*
     for(int i = 0; i < n_vtxs; i++){
         Vertex* vtx = vtxs_->at(i);
 
-        int n_entries = vtx->getParticles()->GetEntries();
+        int n_entries = vtx->getParticles().GetEntries();
         if(n_entries != 2) {
         	std::cout << "Warning: entries of Moller vertex is not 2." << std::endl;
         	return false;
@@ -417,8 +417,8 @@ bool TriggerParametersExtractionMollerSingleTriggerAnaProcessor::process(IEvent*
 		histos->Fill1DHisto("invariant_mass_vertex_h", invariant_mass, weight);
 
 
-        Particle* particleTop = (Particle*)vtx->getParticles()->At(0);
-        Particle* particleBot = (Particle*)vtx->getParticles()->At(1);
+        Particle* particleTop = (Particle*)vtx->getParticles().At(0);
+        Particle* particleBot = (Particle*)vtx->getParticles().At(1);
 
         std::vector<double> momTop =  particleTop->getMomentum();
         std::vector<double> momBot =  particleBot->getMomentum();
@@ -682,7 +682,7 @@ bool TriggerParametersExtractionMollerSingleTriggerAnaProcessor::process(IEvent*
 	for (int i = 0; i < n_vtxs; i++) {
 		Vertex* vtx = vtxs_->at(i);
 
-		int n_entries = vtx->getParticles()->GetEntries();
+		int n_entries = vtx->getParticles().GetEntries();
 		if (n_entries != 2) {
 			std::cout << "Warning: entries of Moller vertex is not 2."
 					<< std::endl;
@@ -691,8 +691,8 @@ bool TriggerParametersExtractionMollerSingleTriggerAnaProcessor::process(IEvent*
 
 		double invariant_mass = vtx->getInvMass();
 
-		Particle* particleTop = (Particle*) vtx->getParticles()->At(0);
-		Particle* particleBot = (Particle*) vtx->getParticles()->At(1);
+		Particle* particleTop = (Particle*) vtx->getParticles().At(0);
+		Particle* particleBot = (Particle*) vtx->getParticles().At(1);
 
 		std::vector<double> momTop = particleTop->getMomentum();
 		std::vector<double> momBot = particleBot->getMomentum();
