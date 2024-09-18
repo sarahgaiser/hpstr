@@ -164,7 +164,7 @@ Track* utils::buildTrack(EVENT::Track* lc_track,
 
      //TrackState Location map
      std::map<std::string, int> trackstateLocationMap_ = {
-        {"AtIP", EVENT::TrackState::AtIP},
+        {"", EVENT::TrackState::AtIP},
         {"AtTarget", EVENT::TrackState::LastLocation}
      };
 
@@ -181,7 +181,7 @@ Track* utils::buildTrack(EVENT::Track* lc_track,
 
     Track* track = new Track();
     //If using track AtIP, get params from lc_track
-    if (loc == trackstateLocationMap_["AtIP"]){
+    if (loc == trackstateLocationMap_[""]){
         // Set the track parameters
         track->setTrackParameters(lc_track->getD0(), 
                 lc_track->getPhi(), 

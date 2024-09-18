@@ -4,7 +4,7 @@ import baseConfig as base
 from baseConfig import bfield
 
 base.parser.add_argument("-TS", "--trackstate", type=str, dest="trackstate",
-                         help="Specify Track State | 'AtECal', 'AtTarget'. Default is origin ",  metavar="trackstate", default="AtTarget")
+                         help="Specify Track State | 'AtECal', 'AtTarget'. Default is origin ",  metavar="trackstate", default="")
 
 base.parser.add_argument("-r", "--rawHits", type=int, dest="rawHits",
                          help="Keep raw svt hits: 1=yes", metavar="rawHits", default=0)
@@ -64,7 +64,7 @@ track.parameters["rawhitCollRoot"] = 'SVTRawHitsOnTrack_KF'
 track.parameters["bfield"] = bfield[str(options.year)]
 
 # Vertex
-vtx.parameters["debug"] = 9
+vtx.parameters["debug"] = 0 
 vtx.parameters["vtxCollLcio"] = 'UnconstrainedMollerVertices'
 vtx.parameters["vtxCollRoot"] = 'UnconstrainedMollerVertices'
 vtx.parameters["partCollRoot"] = 'ParticlesOnMollerVertices'
@@ -115,13 +115,13 @@ else:
     fsp.parameters["hitFitsCollLcio"] = ""
 
 
-sequence = [header, vtx]
+sequence = [header, track, vtx, cvtx]
 
 # If MC, get MCParticles
 if (not options.isData):
     sequence.append(mcpart)
 
-#sequence.append(fsp)
+sequence.append(fsp)
 
 p.sequence = sequence
 
