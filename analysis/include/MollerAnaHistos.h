@@ -12,11 +12,11 @@ class MollerAnaHistos : public HistoManager {
 
     public:
 
-	MollerAnaHistos(const std::string& inputName) : HistoManager(inputName) { m_name = inputName; };
+    MollerAnaHistos(const std::string& inputName) : HistoManager(inputName) { m_name = inputName; };
 
-        virtual void Define3DHistos(){};
-        virtual void Define2DHistos(){};
-        virtual void Define1DHistos();
+    virtual void Define3DHistos(){};
+    virtual void Define2DHistos(){};
+    virtual void Define1DHistos();
 };
 
 #endif //MOLLER_ANAHISTOS_H

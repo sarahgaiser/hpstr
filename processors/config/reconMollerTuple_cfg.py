@@ -12,8 +12,9 @@ print('Root file: %s' % root_file)
 
 p = HpstrConf.Process()
 
-
 p.run_mode = 0
+p.skip_events = options.skip_events
+p.max_events = options.nevents
 
 # Library containing processors
 p.add_library("libprocessors")
@@ -23,7 +24,7 @@ p.add_library("libprocessors")
 ###############################
 header = HpstrConf.Processor('header', 'EventProcessor')
 track = HpstrConf.Processor('track', 'TrackingProcessor')
-ecal = HpstrConf.Processor('ecal', 'ECalDataProcessor')
+# ecal = HpstrConf.Processor('ecal', 'ECalDataProcessor')
 vtx = HpstrConf.Processor('vtx', 'VertexProcessor')
 
 ###############################
@@ -51,24 +52,25 @@ track.parameters["rawhitCollRoot"] = ''
 
 
 #ECalData
-ecal.parameters["debug"] = 0 
-ecal.parameters["hitCollLcio"] = 'EcalCalHits'
-ecal.parameters["hitCollRoot"] = 'RecoEcalHits'
-ecal.parameters["clusCollLcio"] = "EcalClustersCorr"
-ecal.parameters["clusCollRoot"] = "RecoEcalClusters"
+# ecal.parameters["debug"] = 0 
+# ecal.parameters["hitCollLcio"] = 'EcalCalHits'
+# ecal.parameters["hitCollRoot"] = 'RecoEcalHits'
+# ecal.parameters["clusCollLcio"] = "EcalClustersCorr"
+# ecal.parameters["clusCollRoot"] = "RecoEcalClusters"
 
 #Vertex
 vtx.parameters["debug"] = 0
-vtx.parameters["vtxCollLcio"]    = 'UnconstrainedMollerVertices_KF'
-vtx.parameters["vtxCollRoot"]    = 'UnconstrainedMollerVertices_KF'
-vtx.parameters["partCollRoot"]   = 'ParticlesMollerOnVertices_KF'
+vtx.parameters["vtxCollLcio"]    = 'UnconstrainedMollerVertices'
+vtx.parameters["vtxCollRoot"]    = 'UnconstrainedMollerVertices'
+vtx.parameters["partCollRoot"]   = 'ParticlesOnMollerVertices'
 vtx.parameters["kinkRelCollLcio"] = ''
 vtx.parameters["trkRelCollLcio"] = 'KFTrackDataRelations'
 
 # Sequence which the processors will run.
-if options.isData == -1: print("Please specficy if this is Data or not via option -t")
+if options.isData == -1: 
+    print("Please specficy if this is Data or not via option -t")
 
-p.sequence = [header, track, ecal, vtx]
+p.sequence = [header, track, vtx]
 
 p.input_files= lcio_file
 p.output_files = root_file

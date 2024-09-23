@@ -13,12 +13,11 @@
 #include "Vertex.h"
 #include "Processor.h"
 #include "HistoManager.h"
-#include "MollerAnaHistos.h"
-
 #include "FlatTupleMaker.h"
 #include "AnaHelpers.h"
-
 #include "BaseSelector.h"
+
+#include "MollerAnaHistos.h"
 
 //ROOT
 #include "TFile.h"
@@ -28,9 +27,11 @@
 #include "TVector3.h"
 #include "TLorentzVector.h"
 #include "TMath.h"
+#include "TF1.h"
 
 //C++
 #include <memory>
+#include "math.h"
 
 
 struct char_cmp {
@@ -61,6 +62,8 @@ class MollerAnaProcessor : public Processor {
         std::shared_ptr<BaseSelector> vtxSelector;
         std::string vertexSelectionCfg_;
 
+        std::vector<std::string> regionSelections_; //!< description
+
         //Containers to hold histogrammer info
         MollerAnaHistos* trackHistos{nullptr};
         std::string  histTrackCfgFilename_;
@@ -69,22 +72,30 @@ class MollerAnaProcessor : public Processor {
         std::string  histVertexCfgFilename_;
 
         TTree* tree_{nullptr};
-        TBranch* btsData_{nullptr};
-        TBranch* btrks_{nullptr};
-        TBranch* bvtxs_{nullptr};
+        TBranch* btsData_{nullptr}; //!< TS Bank branch
+        TBranch* btrks_{nullptr}; //!< tracks branch 
+        TBranch* bvtxs_{nullptr}; //!< vertices branch
 
         TSData* tsData_{};
-        std::vector<Track*>  * trks_{};
-        std::vector<Vertex*> * vtxs_{};
+        std::vector<Track*>* trks_{};
+        std::vector<Vertex*>* vtxs_{};
 
         std::string anaName_{"mollerAna"};
         std::string tsColl_{"TSBank"};
         std::string trkColl_{"KalmanFullTracks"};
         std::string vtxColl_{"UnconstrainedMollerVertices"};
 
+        std::map<std::string, std::shared_ptr<BaseSelector>> _reg_selectors; //!< description
+        std::map<std::string, std::shared_ptr<TrackHistos>> _reg_histos; //!< description
+        std::map<std::string, std::shared_ptr<FlatTupleMaker>> _reg_tuples; //!< description
+
+        std::vector<std::string> _regions; //!< description
+
+        typedef std::map<std::string, std::shared_ptr<TrackHistos>>::iterator reg_it; //!< description
 
         double beamE_{3.7};
         int isData_{1};
+        int makeFlatTuple_{0}; //!< make true in config to save flat tuple
         std::string analysis_{"MollerAnalysis"};
 
         //Debug level
@@ -97,7 +108,7 @@ class MollerAnaProcessor : public Processor {
         TF1* func_theta1_vs_theta2_after_roation;
 
         // save a tree for information of tracks from vertices
-        //std::shared_ptr<FlatTupleMaker> _reg_tracks_from_vertices;
+        // std::shared_ptr<FlatTupleMaker> _reg_tracks_from_vertices;
 
 };
 
