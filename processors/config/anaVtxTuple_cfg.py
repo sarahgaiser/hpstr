@@ -47,9 +47,9 @@ vtxana.parameters["hitColl"] = "SiClustersOnTrack"
 vtxana.parameters["vtxColl"] = "UnconstrainedV0Vertices_KF"
 vtxana.parameters["mcColl"] = "MCParticle"
 vtxana.parameters["analysis"] = "vertex"
-vtxana.parameters["vtxSelectionjson"] = os.environ['HPSTR_BASE']+'/analysis/selections/vertexSelection_2019.json'
+vtxana.parameters["vtxSelectionjson"] = os.environ['HPSTR_BASE']+'/analysis/selections/empty.json'
 vtxana.parameters["mcHistoCfg"] = os.environ['HPSTR_BASE']+'/analysis/plotconfigs/mc/basicMC.json'
-vtxana.parameters["histoCfg"] = os.environ['HPSTR_BASE']+"/analysis/plotconfigs/tracking/vtxAnalysis_2019.json"
+vtxana.parameters["histoCfg"] = os.environ['HPSTR_BASE']+"/analysis/plotconfigs/tracking/vtxAnalysis_2021.json"
 vtxana.parameters["beamE"] = base.beamE[str(options.year)]
 vtxana.parameters["isData"] = options.isData
 vtxana.parameters["isRadPDG"] = 622
@@ -76,8 +76,8 @@ RegionPath = os.environ['HPSTR_BASE']+"/analysis/selections/"
 if (options.year == 2019):
     vtxana.parameters["regionDefinitions"] = [RegionPath+'Tight_2019.json', RegionPath+'Tight_pTop_2019.json', RegionPath+'Tight_pBot_2019.json']
 if (options.year == 2021):
-    vtxana.parameters["regionDefinitions"] = [RegionPath+'Tight_2021.json', RegionPath+'Tight_pTop_2021.json', RegionPath+'Tight_pBot_2021.json']
-
+#    vtxana.parameters["regionDefinitions"] = [RegionPath+'Tight_2021.json', RegionPath+'Tight_pTop_2021.json', RegionPath+'Tight_pBot_2021.json']
+    vtxana.parameters["regionDefinitions"] = [RegionPath+'preselectionCuts/all_cuts.json', RegionPath+'preselectionCuts/eleMom_lt_cut.json', RegionPath+'preselectionCuts/eleMom_gt_cut.json', RegionPath+'preselectionCuts/posMom_gt_cut.json', RegionPath+'preselectionCuts/eleN2Dhits_gt_cut.json', RegionPath+'preselectionCuts/posN2Dhits_gt_cut.json', RegionPath+'preselectionCuts/ele_chi2ndf_cut.json', RegionPath+'preselectionCuts/pos_chi2ndf_cut.json', RegionPath+'preselectionCuts/maxVtxMom_lt_cut.json']
 # Sequence which the processors will run.
 p.sequence = [vtxana]
 
