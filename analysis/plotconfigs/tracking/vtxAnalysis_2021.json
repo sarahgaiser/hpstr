@@ -147,6 +147,13 @@
         "xtitle" : "track time [ns]",
         "ytitle" : "Tracks"
     },
+    "ele_track_clus_dt_h" : {
+        "bins" : 400,
+        "minX" : -60,
+        "maxX" : 60,
+        "xtitle" : "t_{e^{-}, track} - t_{e^{+}, cluster} [ns]",
+        "ytitle" : "Tracks"
+    },
     "ele_chi2_h" : {
         "bins" : 200,
         "minX" : 0,
@@ -506,6 +513,13 @@
         "minX" : -30,
         "maxX" : 30,
         "xtitle" : "track time [ns]",
+        "ytitle" : "Tracks"
+    },
+    "pos_track_clus_dt_h" : {
+        "bins" : 400,
+        "minX" : -60,
+        "maxX" : 60,
+        "xtitle" : "t_{e^{+}, track} - t_{e^{+}, cluster} [ns]",
         "ytitle" : "Tracks"
     },
     "pos_chi2_h" : {

@@ -94,6 +94,7 @@ void Track::applyCorrection(std::string var, double correction){
     }
     if(var == "track_time"){
         track_time_ = track_time_ + correction;
+	//track_time_correction_ = correction;
     }
 }
 
