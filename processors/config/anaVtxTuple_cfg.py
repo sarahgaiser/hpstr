@@ -47,13 +47,17 @@ vtxana.parameters["hitColl"] = "SiClustersOnTrack"
 vtxana.parameters["vtxColl"] = "UnconstrainedV0Vertices_KF"
 vtxana.parameters["mcColl"] = "MCParticle"
 vtxana.parameters["analysis"] = "vertex"
-vtxana.parameters["vtxSelectionjson"] = os.environ['HPSTR_BASE']+'/analysis/selections/vertexSelection_2019.json'
+if (options.year == 2019):
+    vtxana.parameters["vtxSelectionjson"] = os.environ['HPSTR_BASE']+'/analysis/selections/vertexSelection_2019.json'
+else:
+    vtxana.parameters["vtxSelectionjson"] = os.environ['HPSTR_BASE']+'/analysis/selections/vertexSelection_2021.json'
 vtxana.parameters["mcHistoCfg"] = os.environ['HPSTR_BASE']+'/analysis/plotconfigs/mc/basicMC.json'
-vtxana.parameters["histoCfg"] = os.environ['HPSTR_BASE']+"/analysis/plotconfigs/tracking/vtxAnalysis_2019.json"
+vtxana.parameters["histoCfg"] = os.environ['HPSTR_BASE']+"/analysis/plotconfigs/tracking/vtxAnalysis_2021.json"
 vtxana.parameters["beamE"] = base.beamE[str(options.year)]
 vtxana.parameters["isData"] = options.isData
 vtxana.parameters["isRadPDG"] = 622
-vtxana.parameters["makeFlatTuple"] = options.makeFlatTuple
+#vtxana.parameters["makeFlatTuple"] = options.makeFlatTuple
+vtxana.parameters["makeFlatTuple"] = True
 
 CalTimeOffset = -999
 
@@ -76,7 +80,11 @@ RegionPath = os.environ['HPSTR_BASE']+"/analysis/selections/"
 if (options.year == 2019):
     vtxana.parameters["regionDefinitions"] = [RegionPath+'Tight_2019.json', RegionPath+'Tight_pTop_2019.json', RegionPath+'Tight_pBot_2019.json']
 if (options.year == 2021):
-    vtxana.parameters["regionDefinitions"] = [RegionPath+'Tight_2021.json', RegionPath+'Tight_pTop_2021.json', RegionPath+'Tight_pBot_2021.json']
+    vtxana.parameters["regionDefinitions"] = [RegionPath+'Tight_2021.json', RegionPath+'Tight_2021_eleTimeCut.json',  RegionPath+'Tight_pTop_2021.json', RegionPath+'Tight_pBot_2021.json']
+#if (options.year == 2021):
+    # vtxana.parameters["regionDefinitions"] = [RegionPath+'Tight_2021.json', RegionPath+'Tight_L1L1_2021.json', RegionPath+'Tight_L1L2_2021.json', RegionPath+'Tight_L2L1_2021.json', RegionPath+'Tight_L2L2_2021.json']
+#    vtxana.parameters["regionDefinitions"] = [RegionPath+'vtxSelection_inTime500.json', RegionPath+'vtxSelection_inTime40.json', RegionPath+'vtxSelection_inTime20.json', RegionPath+'Tight_L1L1_2021.json', RegionPath+'Tight_L1L1_inTime40_2021.json', RegionPath+'Tight_L1L1_inTime20_2021.json']
+
 
 # Sequence which the processors will run.
 p.sequence = [vtxana]

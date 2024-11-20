@@ -1,27 +1,37 @@
 {
+    "eleTrkTime_lt" : {
+        "cut"  : -30.0,
+        "id"   : 0,
+        "info" : "t_{ele,trk} < 10 ns"
+    },
+    "eleTrkTime_gt" : {
+        "cut"  : -45.0,
+        "id"   : 1,
+        "info" : "t_{ele,trk} > -10 ns"
+    },
     "chi2unc_lt" : {
         "cut"  : 20.0,
-        "id"   : 0,
+        "id"   : 2,
         "info" : "#chi^{2}_{unc}<20"
     },
     "L1Requirement_eq"  : {
         "cut"  : 1,
-        "id"   : 1,
+        "id"   : 3,
         "info" : "L1L1"
     },
     "pSum_lt"  : {
         "cut"  : 4.0,
-        "id"   : 2,
+        "id"   : 4,
         "info" : "P_{e^{-}} + P_{e^{+}}<4.0 GeV"
     },
     "pSum_gt"  : {
         "cut"  : 3.0,
-        "id"   : 3,
+        "id"   : 5,
         "info" : "P_{e^{-}} + P_{e^{+}}>3.0 GeV"
     },
     "nVtxs_eq" : {
         "cut"  : 1,
-        "id"   : 4,
+        "id"   : 6,
         "info" : "N_{vtx}=1"
     }
 }
