@@ -40,6 +40,7 @@ trackrefitgbl = HpstrConf.Processor('trackrefitgbl', 'TrackingProcessor')
 svthits = HpstrConf.Processor('svthitskf', 'Tracker2DHitProcessor')
 svthitsgbl = HpstrConf.Processor('svthitsgbl', 'Tracker3DHitProcessor')
 rawsvt = HpstrConf.Processor('rawsvt', 'SvtRawDataProcessor')
+hodo = HpstrConf.Processor('hodo', 'HodoDataProcessor')
 ecal = HpstrConf.Processor('ecal', 'ECalDataProcessor')
 vtx = HpstrConf.Processor('vtx', 'VertexProcessor')
 cvtx = HpstrConf.Processor('cvtx', 'VertexProcessor')
@@ -71,7 +72,6 @@ rawsvt.parameters["hitCollRoot"] = 'SVTRawTrackerHits'
 svthits.parameters["debug"] = 0
 svthits.parameters["hitCollLcio"] = 'RotatedHelicalTrackHits'
 svthits.parameters["hitCollRoot"] = 'RotatedHelicalTrackHits'
-
 
 # Tracking
 track.parameters["debug"] = 0
