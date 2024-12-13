@@ -1,7 +1,0 @@
-{
-    "eleTrkCluTimeDiff_lt" : {
-        "cut"  : 5,
-        "id"   : 0,
-        "info" : "#Delta(t_{e^{-},trk}, t_{e^{+},clu}) < 5ns"
-    }
-}
