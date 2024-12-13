@@ -1293,6 +1293,9 @@ bool VertexAnaProcessor::process(IEvent* ievent) {
             _reg_vtx_histos[region]->Fill1DHisto("ele_track_clus_dt_h", corr_eleTrackTime - corr_posClusterTime, weight);
             _reg_vtx_histos[region]->Fill1DHisto("pos_track_clus_dt_h", corr_posTrackTime - corr_posClusterTime, weight);
 
+	    _reg_vtx_histos[region]->Fill1DHisto("ele_time_h", corr_eleTrackTime, weight);
+            _reg_vtx_histos[region]->Fill1DHisto("pos_time_h", corr_posTrackTime, weight);
+
             //TODO put this in the Vertex!
             TVector3 vtxPosSvt;
             vtxPosSvt.SetX(vtx->getX());

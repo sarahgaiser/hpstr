@@ -53,7 +53,7 @@ vtxana.parameters["histoCfg"] = os.environ['HPSTR_BASE']+"/analysis/plotconfigs/
 vtxana.parameters["beamE"] = base.beamE[str(options.year)]
 vtxana.parameters["isData"] = options.isData
 vtxana.parameters["isRadPDG"] = 622
-vtxana.parameters["makeFlatTuple"] = False
+vtxana.parameters["makeFlatTuple"] = True
 
 CalTimeOffset = -999
 eleTrackTimeBias = -999
@@ -62,7 +62,7 @@ posTrackTimeBias = -999
 if (options.isData == 1):
     #CalTimeOffset = 56.
     CalTimeOffset = 37.4
-    eleTrackTimeBias = 0.
+    eleTrackTimeBias = 0.46
     posTrackTimeBias = 0.
     print("Running on data file: Setting CalTimeOffset %d" % CalTimeOffset)
 
@@ -88,20 +88,35 @@ if (options.year == 2019):
     vtxana.parameters["regionDefinitions"] = [RegionPath+'Tight_2019.json', RegionPath+'Tight_pTop_2019.json', RegionPath+'Tight_pBot_2019.json']
 if (options.year == 2021):
 #    vtxana.parameters["regionDefinitions"] = [RegionPath+'Tight_2021.json', RegionPath+'Tight_pTop_2021.json', RegionPath+'Tight_pBot_2021.json']
-    vtxana.parameters["regionDefinitions"] = [RegionPath+'preselectionCuts/all_cuts.json',
-                                              RegionPath+'preselectionCuts/eleMom_lt_cut.json',
-                                              RegionPath+'preselectionCuts/eleMom_gt_cut.json',
-                                              RegionPath+'preselectionCuts/posMom_gt_cut.json',
-                                              RegionPath+'preselectionCuts/eleN2Dhits_gt_cut.json',
-                                              RegionPath+'preselectionCuts/posN2Dhits_gt_cut.json',
-                                              RegionPath+'preselectionCuts/ele_chi2ndf_cut.json',
-                                              RegionPath+'preselectionCuts/pos_chi2ndf_cut.json',
-                                              RegionPath+'preselectionCuts/maxVtxMom_lt_cut.json',
-                                              RegionPath+'preselectionCuts/chi2unc_cut.json',
-                                              RegionPath+'preselectionCuts/eleposCluTimeDiff_cut.json',
-                                              RegionPath+'preselectionCuts/eleTrkTime_cut.json',
-                                              RegionPath+'preselectionCuts/posTrkTime_cut.json']
-#    vtxana.parameters["regionDefinitions"] = [RegionPath+'empty.json', RegionPath+'preselectionCuts/all_cuts.json'] 
+    vtxana.parameters["regionDefinitions"] = [RegionPath+'empty.json', RegionPath+'preselectionCuts/all_cuts.json']
+#    vtxana.parameters["regionDefinitions"] = [RegionPath+'preselectionCuts/all_cuts.json',
+#                                              RegionPath+'preselectionCuts/eleMom_lt_cut.json',
+#                                              RegionPath+'preselectionCuts/eleMom_gt_0pt4_cut.json',
+#                                              RegionPath+'preselectionCuts/posMom_gt_0pt4_cut.json',
+#                                              RegionPath+'preselectionCuts/eleN2Dhits_gt_8_cut.json',
+#                                              RegionPath+'preselectionCuts/posN2Dhits_gt_8_cut.json',
+#                                              RegionPath+'preselectionCuts/ele_chi2ndf_cut.json',
+#                                              RegionPath+'preselectionCuts/pos_chi2ndf_cut.json',
+#                                              RegionPath+'preselectionCuts/maxVtxMom_lt_cut.json',
+#                                              RegionPath+'preselectionCuts/chi2unc_cut.json',
+#                                              RegionPath+'preselectionCuts/eleTrkCluDt_4sig_cut.json',
+#                                              RegionPath+'preselectionCuts/posTrkCluDt_4sig_cut.json']
+#    vtxana.parameters["regionDefinitions"] = [RegionPath+'preselectionCuts/eleMom_gt_0pt2_cut.json',
+#                                              RegionPath+'preselectionCuts/eleMom_gt_0pt3_cut.json',
+#                                              RegionPath+'preselectionCuts/eleMom_gt_0pt4_cut.json',
+#                                              RegionPath+'preselectionCuts/eleMom_gt_0pt5_cut.json'] 
+#    vtxana.parameters["regionDefinitions"] = [RegionPath+'preselectionCuts/eleTrkCluDt_2sig_cut.json',
+#                                              RegionPath+'preselectionCuts/eleTrkCluDt_3sig_cut.json',
+#                                              RegionPath+'preselectionCuts/eleTrkCluDt_4sig_cut.json',
+#                                              RegionPath+'preselectionCuts/posTrkCluDt_2sig_cut.json',
+#                                              RegionPath+'preselectionCuts/posTrkCluDt_3sig_cut.json',
+#                                              RegionPath+'preselectionCuts/posTrkCluDt_4sig_cut.json']
+#    vtxana.parameters["regionDefinitions"] = [RegionPath+'preselectionCuts/eleN2Dhits_gt_10_cut.json',
+#                                              RegionPath+'preselectionCuts/eleN2Dhits_gt_8_cut.json',
+#                                              RegionPath+'preselectionCuts/posN2Dhits_gt_10_cut.json',
+#                                              RegionPath+'preselectionCuts/posN2Dhits_gt_8_cut.json']
+
+
 # Sequence which the processors will run.
 p.sequence = [vtxana]
 
