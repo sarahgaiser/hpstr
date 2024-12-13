@@ -1,53 +1,53 @@
 {
     "eleTrkCluTimeDiff_lt" : {
-    	"cut"  : 5,
+    	"cut"  : 9.5,
 	"id"   : 0,
-	"info" : "#Delta(t_{e^{-},trk}, t_{e^{+},clu}) < 5ns"
+	"info" : "#Delta(t_{e^{-},trk}, t_{e^{+},clu}) < 9.5ns"
     },
     "posTrkCluTimeDiff_lt" : {
-        "cut"  : 5,
+        "cut"  : 5.5,
         "id"   : 1,
-        "info" : "#Delta(t_{e^{+},trk}, t_{e^{+},clu}) < 5ns"
+        "info" : "#Delta(t_{e^{+},trk}, t_{e^{+},clu}) < 5.5ns"
     },
     "eleTrkChi2Ndf_lt" : {
-        "cut"  : 30,
+        "cut"  : 20,
         "id"   : 2,
-        "info" : "e^{-} Track #chi^{2}/ndf < 30"
+        "info" : "e^{-} Track #chi^{2}/ndf < 20"
     },
     "posTrkChi2Ndf_lt" : {
-        "cut"  : 30,
+        "cut"  : 20,
         "id"   : 3,
-        "info" : "e^{+} Track #chi^{2}/ndf < 30"
+        "info" : "e^{+} Track #chi^{2}/ndf < 20"
     },
     "eleMom_lt" : {
         "cut" : 2.9,
         "id"  : 4,
-        "info" : "p e^{-} < 2.9 GeV"
+        "info" : "p_{e^{-}} < 2.9 GeV"
     },
     "eleMom_gt" : {
-        "cut" : 0.5,
+        "cut" : 0.4,
         "id"  : 5,
-        "info" : "p_e^{-} > 0.5 [GeV]"
+        "info" : "p_{e^{-}} > 0.4 [GeV]"
     },
     "posMom_gt" : {
-        "cut" : 0.5,
+        "cut" : 0.4,
         "id"  : 6,
-        "info" : "p_e^{+} > 0.5 [GeV]"
+        "info" : "p_{e^{+}} > 0.4 [GeV]"
     },
     "eleN2Dhits_gt" : {
-        "cut"  : 10,
+        "cut"  : 8,
         "id"   : 7,
-        "info" : "e^{-} track n2d hits  >= 10"
+        "info" : "e^{-} track n2d hits #geq 8"
     },
     "posN2Dhits_gt" : {
-        "cut"  : 10,
+        "cut"  : 8,
         "id"   : 8,
-        "info" : "e^{+} track n2d hits  >= 10"
+        "info" : "e^{+} track n2d hits #geq 8"
     },
     "chi2unc_lt" : {
-        "cut"   : 20,
+        "cut"   : 30,
         "id"    : 9,
-        "info"  : "#chi^{2}_{unc} < 20"
+        "info"  : "#chi^{2}_{unc} < 30"
     },
     "maxVtxMom_lt" : {
         "cut" : 4.0,
