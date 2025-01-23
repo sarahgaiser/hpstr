@@ -63,14 +63,16 @@ if (options.isData == 1):
     #CalTimeOffset = 56.
     CalTimeOffset = 37.4
     eleTrackTimeBias = 0.46
-    posTrackTimeBias = 0.
+    posTrackTimeBias = 0.46
     print("Running on data file: Setting CalTimeOffset %d" % CalTimeOffset)
 
 elif (options.isData == 0):
     #CalTimeOffset = 43.
-    CalTimeOffset = 24.2
-    eleTrackTimeBias = 28.9
-    posTrackTimeBias = 28.9
+    CalTimeOffset = 24.1
+    #eleTrackTimeBias = 28.9
+    #posTrackTimeBias = 28.9
+    eleTrackTimeBias = 55.1 #35.1 for spaced
+    posTrackTimeBias = 55.1 #35.1 for spaced
     print("Running on MC file: Setting CalTimeOffset %d" % CalTimeOffset)
 else:
     print("Specify which type of ntuple you are running on: -t 1 [for Data] / -t 0 [for MC]")
