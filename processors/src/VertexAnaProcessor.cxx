@@ -127,6 +127,7 @@ void VertexAnaProcessor::initialize(TTree* tree) {
             _reg_tuples[regname]->addVariable("unc_vtx_mass");
             _reg_tuples[regname]->addVariable("unc_vtx_z");
             _reg_tuples[regname]->addVariable("unc_vtx_chi2");
+            _reg_tuples[regname]->addVariable("unc_vtx_ndf");
             _reg_tuples[regname]->addVariable("unc_vtx_psum");
             _reg_tuples[regname]->addVariable("unc_vtx_px");
             _reg_tuples[regname]->addVariable("unc_vtx_py");
@@ -156,6 +157,8 @@ void VertexAnaProcessor::initialize(TTree* tree) {
             _reg_tuples[regname]->addVariable("unc_vtx_ele_track_tanLambda");
             _reg_tuples[regname]->addVariable("unc_vtx_ele_track_z0");
             _reg_tuples[regname]->addVariable("unc_vtx_ele_track_chi2ndf");
+            _reg_tuples[regname]->addVariable("unc_vtx_ele_track_chi2");
+            _reg_tuples[regname]->addVariable("unc_vtx_ele_track_ndf");
             _reg_tuples[regname]->addVariable("unc_vtx_ele_track_clust_dt");
             _reg_tuples[regname]->addVariable("unc_vtx_ele_track_z0Err");
             _reg_tuples[regname]->addVariable("unc_vtx_ele_track_d0Err");
@@ -180,6 +183,8 @@ void VertexAnaProcessor::initialize(TTree* tree) {
             _reg_tuples[regname]->addVariable("unc_vtx_pos_track_tanLambda");
             _reg_tuples[regname]->addVariable("unc_vtx_pos_track_z0");
             _reg_tuples[regname]->addVariable("unc_vtx_pos_track_chi2ndf");
+            _reg_tuples[regname]->addVariable("unc_vtx_pos_track_chi2");
+            _reg_tuples[regname]->addVariable("unc_vtx_pos_track_ndf");
             _reg_tuples[regname]->addVariable("unc_vtx_pos_track_z0Err");
             _reg_tuples[regname]->addVariable("unc_vtx_pos_track_d0Err");
             _reg_tuples[regname]->addVariable("unc_vtx_pos_track_tanLambdaErr");
@@ -931,6 +936,9 @@ bool VertexAnaProcessor::process(IEvent* ievent) {
             if (!_reg_vtx_selectors[region]->passCutLt("volPos_bot", p_pos.Py(), weight))
                 continue;
 
+            if (!_reg_vtx_selectors[region]->passCutLt("deltaZ_lt", std::abs((ele_trk.getZ0()/ele_trk.getTanLambda()) - (pos_trk.getZ0()/pos_trk.getTanLambda())), weight))
+                continue;
+            
             //If this is MC check if MCParticle matched to the electron track is from rad or recoil
             if(!isData_)
             {
@@ -1320,6 +1328,7 @@ bool VertexAnaProcessor::process(IEvent* ievent) {
                 _reg_tuples[region]->setVariableValue("unc_vtx_mass", vtx->getInvMass());
                 _reg_tuples[region]->setVariableValue("unc_vtx_z"   , vtxPosSvt.Z());
                 _reg_tuples[region]->setVariableValue("unc_vtx_chi2", vtx->getChi2());
+                _reg_tuples[region]->setVariableValue("unc_vtx_ndf", vtx->getNdf());
                 _reg_tuples[region]->setVariableValue("unc_vtx_psum", p_ele.P()+p_pos.P());
                 _reg_tuples[region]->setVariableValue("unc_vtx_px", vtx->getP().X());
                 _reg_tuples[region]->setVariableValue("unc_vtx_py", vtx->getP().Y());
@@ -1348,7 +1357,9 @@ bool VertexAnaProcessor::process(IEvent* ievent) {
                 _reg_tuples[region]->setVariableValue("unc_vtx_ele_track_tanLambda", ele_trk_gbl->getTanLambda());
                 _reg_tuples[region]->setVariableValue("unc_vtx_ele_track_z0", ele_trk_gbl->getZ0());
                 _reg_tuples[region]->setVariableValue("unc_vtx_ele_track_chi2ndf", ele_trk_gbl->getChi2Ndf());
-                _reg_tuples[region]->setVariableValue("unc_vtx_ele_track_clust_dt", corr_eleTrackTime - corr_eleClusterTime);
+                _reg_tuples[region]->setVariableValue("unc_vtx_ele_track_chi2", ele_trk_gbl->getChi2());
+                _reg_tuples[region]->setVariableValue("unc_vtx_ele_track_ndf", ele_trk_gbl->getNdf());
+                _reg_tuples[region]->setVariableValue("unc_vtx_ele_track_clust_dt", corr_eleTrackTime - corr_posClusterTime);
                 _reg_tuples[region]->setVariableValue("unc_vtx_ele_track_z0Err",ele_trk_gbl->getZ0Err());
                 _reg_tuples[region]->setVariableValue("unc_vtx_ele_track_d0Err", ele_trk_gbl->getD0Err());
                 _reg_tuples[region]->setVariableValue("unc_vtx_ele_track_tanLambdaErr", ele_trk_gbl->getTanLambdaErr());
@@ -1365,6 +1376,8 @@ bool VertexAnaProcessor::process(IEvent* ievent) {
                 _reg_tuples[region]->setVariableValue("unc_vtx_pos_track_tanLambda", pos_trk_gbl->getTanLambda());
                 _reg_tuples[region]->setVariableValue("unc_vtx_pos_track_z0", pos_trk_gbl->getZ0());
                 _reg_tuples[region]->setVariableValue("unc_vtx_pos_track_chi2ndf", pos_trk_gbl->getChi2Ndf());
+                _reg_tuples[region]->setVariableValue("unc_vtx_pos_track_chi2", pos_trk_gbl->getChi2());
+                _reg_tuples[region]->setVariableValue("unc_vtx_pos_track_ndf", pos_trk_gbl->getNdf());
                 _reg_tuples[region]->setVariableValue("unc_vtx_pos_track_clust_dt", corr_posTrackTime - corr_posClusterTime);
                 _reg_tuples[region]->setVariableValue("unc_vtx_pos_track_z0Err",pos_trk_gbl->getZ0Err());
                 _reg_tuples[region]->setVariableValue("unc_vtx_pos_track_d0Err", pos_trk_gbl->getD0Err());
