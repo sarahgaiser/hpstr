@@ -627,8 +627,9 @@ double utils::getKalmanTrackL1Isolations(Track* track, std::vector<TrackerHit*>*
 
         //Get rawhit strip information
         std::vector<int> trackhit_rawhits = track_hit->getRawHitStripNumbers();
-        if(trackhit_rawhits.size() < 1)
+        if(trackhit_rawhits.size() < 1) {
             continue;
+        }
         int trackhit_maxstrip = *max_element(trackhit_rawhits.begin(), trackhit_rawhits.end());
         int trackhit_minstrip = *min_element(trackhit_rawhits.begin(), trackhit_rawhits.end());
 
@@ -653,8 +654,9 @@ double utils::getKalmanTrackL1Isolations(Track* track, std::vector<TrackerHit*>*
         double closest_dt = 999999.9;
         double isohit_y = 999999.9;
 
-        if ( siClusters == nullptr )
+        if ( siClusters == nullptr ) {
             return isohit_dy;
+        }
         for(int j = 0; j < siClusters->size(); j++){
             TrackerHit* althit = siClusters->at(j);
             int althit_id = althit->getID();
@@ -665,25 +667,30 @@ double utils::getKalmanTrackL1Isolations(Track* track, std::vector<TrackerHit*>*
             double althit_time = althit->getTime();
 
             //Skip if SiCluster not on same layer as track hit
-            if (althit_layer != trackhit_layer)
+            if (althit_layer != trackhit_layer) {
                 continue;
+            }
 
             //Skip if volume doesn't match
-            if(althit_volume != trackhit_volume)
+            if(althit_volume != trackhit_volume) {
                 continue;
+            }
 
             //Skip same hit
-            if (althit_id == trackhit_id)
+            if (althit_id == trackhit_id) {
                 continue;
+            }
 
             //Only look at hits that are further from beam-axis in Global Y
             if ( (trackhit_volume == 0 && althit_y < trackhit_y) ||
-                    (trackhit_volume == 1 && althit_y > trackhit_y))
+                    (trackhit_volume == 1 && althit_y > trackhit_y)) {
+                // std::cout << "althit_y " << althit_y << " trackhit_y " << trackhit_y << std::endl;
                 continue;
-
+            }
             //Require alternative hits to be within +-30ns (based on SiClustersOnTrack t distr)
-            if(std::abs(althit_time) > 30.0)
+            if(std::abs(althit_time) > 30.0) {
                 continue;
+            }
 
             //Skip adjacent rawhits
             std::vector<int> althit_rawhits = althit->getRawHitStripNumbers();
