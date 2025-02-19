@@ -12,7 +12,9 @@ var searchData=
   ['recohitanaprocessor_2ecxx_9',['RecoHitAnaProcessor.cxx',['../RecoHitAnaProcessor_8cxx.html',1,'']]],
   ['recohitanaprocessor_2eh_10',['RecoHitAnaProcessor.h',['../RecoHitAnaProcessor_8h.html',1,'']]],
   ['recotuple_5fcfg_2epy_11',['recoTuple_cfg.py',['../recoTuple__cfg_8py.html',1,'']]],
-  ['refittedtracksprocessor_2ecxx_12',['RefittedTracksProcessor.cxx',['../RefittedTracksProcessor_8cxx.html',1,'']]],
-  ['refittedtracksprocessor_2eh_13',['RefittedTracksProcessor.h',['../RefittedTracksProcessor_8h.html',1,'']]],
-  ['rootntuple_5fexample_2epy_14',['rootNtuple_example.py',['../rootNtuple__example_8py.html',1,'']]]
+  ['recotuple_5fnohitcoll_5fcfg_2epy_12',['recoTuple_noHitColl_cfg.py',['../recoTuple__noHitColl__cfg_8py.html',1,'']]],
+  ['recotuple_5ftrkeff_5fcfg_2epy_13',['recoTuple_trkEff_cfg.py',['../recoTuple__trkEff__cfg_8py.html',1,'']]],
+  ['refittedtracksprocessor_2ecxx_14',['RefittedTracksProcessor.cxx',['../RefittedTracksProcessor_8cxx.html',1,'']]],
+  ['refittedtracksprocessor_2eh_15',['RefittedTracksProcessor.h',['../RefittedTracksProcessor_8h.html',1,'']]],
+  ['rootntuple_5fexample_2epy_16',['rootNtuple_example.py',['../rootNtuple__example_8py.html',1,'']]]
 ];
