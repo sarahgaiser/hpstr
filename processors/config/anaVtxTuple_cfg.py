@@ -47,13 +47,14 @@ vtxana.parameters["hitColl"] = "SiClustersOnTrack"
 vtxana.parameters["vtxColl"] = "UnconstrainedV0Vertices_KF"
 vtxana.parameters["mcColl"] = "MCParticle"
 vtxana.parameters["analysis"] = "vertex"
-vtxana.parameters["vtxSelectionjson"] = os.environ['HPSTR_BASE']+'/analysis/selections/empty.json'
+vtxana.parameters["vtxSelectionjson"] = os.environ['HPSTR_BASE']+'/analysis/selections/preselectionCuts/all_cuts.json'
 vtxana.parameters["mcHistoCfg"] = os.environ['HPSTR_BASE']+'/analysis/plotconfigs/mc/basicMC.json'
 vtxana.parameters["histoCfg"] = os.environ['HPSTR_BASE']+"/analysis/plotconfigs/tracking/vtxAnalysis_2021.json"
 vtxana.parameters["beamE"] = base.beamE[str(options.year)]
 vtxana.parameters["isData"] = options.isData
 vtxana.parameters["isRadPDG"] = 622
 vtxana.parameters["makeFlatTuple"] = True
+vtxana.parameters["v0ProjectionFitsCfg"] = os.environ['HPSTR_BASE'] + "/analysis/data/v0_projection_2021_mc_signal_config.json"
 
 CalTimeOffset = -999
 eleTrackTimeBias = -999
@@ -68,11 +69,11 @@ if (options.isData == 1):
 
 elif (options.isData == 0):
     #CalTimeOffset = 43.
-    CalTimeOffset = 24.1
+    CalTimeOffset = 24.
     #eleTrackTimeBias = 28.9
     #posTrackTimeBias = 28.9
-    eleTrackTimeBias = 55.1 #35.1 for spaced
-    posTrackTimeBias = 55.1 #35.1 for spaced
+    eleTrackTimeBias = 35.1 #55 for no spacing
+    posTrackTimeBias = 35.1 #55 for no spacing
     print("Running on MC file: Setting CalTimeOffset %d" % CalTimeOffset)
 else:
     print("Specify which type of ntuple you are running on: -t 1 [for Data] / -t 0 [for MC]")
@@ -90,7 +91,7 @@ if (options.year == 2019):
     vtxana.parameters["regionDefinitions"] = [RegionPath+'Tight_2019.json', RegionPath+'Tight_pTop_2019.json', RegionPath+'Tight_pBot_2019.json']
 if (options.year == 2021):
 #    vtxana.parameters["regionDefinitions"] = [RegionPath+'Tight_2021.json', RegionPath+'Tight_pTop_2021.json', RegionPath+'Tight_pBot_2021.json']
-    vtxana.parameters["regionDefinitions"] = [RegionPath+'empty.json', RegionPath+'preselectionCuts/all_cuts.json']
+    vtxana.parameters["regionDefinitions"] = [RegionPath+'empty.json', RegionPath+'Tight_2021.json']
 #    vtxana.parameters["regionDefinitions"] = [RegionPath+'preselectionCuts/all_cuts.json',
 #                                              RegionPath+'preselectionCuts/eleMom_lt_cut.json',
 #                                              RegionPath+'preselectionCuts/eleMom_gt_0pt4_cut.json',
