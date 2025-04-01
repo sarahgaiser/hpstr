@@ -317,6 +317,8 @@ bool FlatVertexProcessor::process(IEvent* ievent) {
         if (isData_) {
             if (!vtxSelector->passCutEq("Pair1_eq", (int)evth_->isPair1Trigger(),weight))
                 break;
+	    if (!vtxSelector->passCutEq("Singles1_eq", (int)ts_->prescaled.Single_1_Top, weight) || !vtxSelector->passCutEq("Singles1_eq", (int)ts_->prescaled.Single_1_Bot, weight))
+		break;
         }
 
         bool foundParts = _ah->GetParticlesFromVtx(vtx, ele, pos);
