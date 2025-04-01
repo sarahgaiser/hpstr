@@ -5,14 +5,14 @@
         "info" : "E_{e^{+},clu} > 0.2GeV"
     },
     "eleTrkCluTimeDiff_lt" : {
-    	"cut"  : 6.9,
+    	"cut"  : 3.0,
         "id"   : 1,
-        "info" : "#Delta(t_{e^{-},trk}, t_{e^{+},clu}) < 6.9ns"
+        "info" : "#Delta(t_{e^{-},trk}, t_{e^{+},clu}) < 3.0ns"
     },
     "posTrkCluTimeDiff_lt" : {
-        "cut"  : 6.0,
+        "cut"  : 3.0,
         "id"   : 2,
-        "info" : "#Delta(t_{e^{+},trk}, t_{e^{+},clu}) < 6.0ns"
+        "info" : "#Delta(t_{e^{+},trk}, t_{e^{+},clu}) < 3.0ns"
     },
     "eleTrkChi2Ndf_lt" : {
         "cut"  : 20,
