@@ -5,14 +5,14 @@
         "info" : "E_{e^{+},clu} > 0.2GeV"
     },
     "eleTrkCluTimeDiff_lt" : {
-    	"cut"  : 7.8,
+    	"cut"  : 6.9,
         "id"   : 1,
-        "info" : "#Delta(t_{e^{-},trk}, t_{e^{+},clu}) < 7.8ns"
+        "info" : "#Delta(t_{e^{-},trk}, t_{e^{+},clu}) < 6.9ns"
     },
     "posTrkCluTimeDiff_lt" : {
-        "cut"  : 6.6,
+        "cut"  : 6.0,
         "id"   : 2,
-        "info" : "#Delta(t_{e^{+},trk}, t_{e^{+},clu}) < 6.6ns"
+        "info" : "#Delta(t_{e^{+},trk}, t_{e^{+},clu}) < 6.0ns"
     },
     "eleTrkChi2Ndf_lt" : {
         "cut"  : 20,
@@ -40,19 +40,19 @@
         "info" : "p_{e^{+}} > 0.4 [GeV]"
     },
     "eleN2Dhits_gt" : {
-        "cut"  : 10,
+        "cut"  : 9,
         "id"   : 8,
-        "info" : "e^{-} track n2d hits #geq 10"
+        "info" : "e^{-} track n2d hits #geq 9"
     },
     "posN2Dhits_gt" : {
-        "cut"  : 10,
+        "cut"  : 9,
         "id"   : 9,
-        "info" : "e^{+} track n2d hits #geq 10"
+        "info" : "e^{+} track n2d hits #geq 9"
     },
     "chi2unc_lt" : {
-        "cut"   : 30,
+        "cut"   : 20,
         "id"    : 10,
-        "info"  : "#chi^{2}_{unc} < 30"
+        "info"  : "#chi^{2}_{unc} < 20"
     },
     "maxVtxMom_lt" : {
         "cut" : 4.0,
