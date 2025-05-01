@@ -76,9 +76,9 @@ class MCParticle : public TObject {
         /**
          * Set the PDG ID of the origin particle.
          *
-         * @param momPDG The PDG ID of the origin particle
+         * @param originPDG The PDG ID of the origin (A' vertex, nucleus, ...)
          */
-        void setOriginPDG(const int originPDG) {originPDG_ = originPDG; };
+        void SetOriginPDG(const int originPDG) { originPDG_ = originPDG; };
 
         /**
          * Set the generator status of the particle.
@@ -157,9 +157,9 @@ class MCParticle : public TObject {
         int getID() const { return id_; }; 
         
         /** @return The particle ID of the mother. */
-        int getMomPDG() const { return momPDG_; };
+        int getMomPDG() const { return momPDG_; }; 
 
-        /** @return The particle ID of the origin particle */
+        /** @return The particle ID of the origin particle. */
         int getOriginPDG() const { return originPDG_; };
         
         /** @return The particle generator status. */

@@ -51,23 +51,22 @@ vtxana.parameters["makeFlatTuple"] = True
 #vtxana.parameters["v0ProjectionFitsCfg"] = os.environ['HPSTR_BASE'] + "/analysis/data/v0_projection_2021_mc_signal_config.json"
 #vtxana.parameters["beamPosCfg"] = os.environ['HPSTR_BASE'] + "/analysis/data/beamspot_position_2021.json"
 
-CalTimeOffset = -999
-eleTrackTimeBias = -999
-posTrackTimeBias = -999
+CalTimeOffset = 0.0
+eleTrackTimeBias = 0.0
+posTrackTimeBias = 0.0
 
 if (options.isData == 1):
-    #CalTimeOffset = 56.
-    CalTimeOffset = 37.4
-    eleTrackTimeBias = 0.46
-    posTrackTimeBias = 0.46
-    vtxana.parameters["v0ProjectionFitsCfg"] = os.environ['HPSTR_BASE'] + "/analysis/data/v0_projection_2021_config.json"
+    #CalTimeOffset = 37.4
+    #eleTrackTimeBias = 0.46
+    #posTrackTimeBias = 0.46
+    CalTimeOffset = 37.3
+    eleTrackTimeBias = 0.2
+    posTrackTimeBias = 0.0
+    #vtxana.parameters["v0ProjectionFitsCfg"] = os.environ['HPSTR_BASE'] + "/analysis/data/v0_projection_2021_config.json"
     print("Running on data file: Setting CalTimeOffset %d" % CalTimeOffset)
 
 elif (options.isData == 0):
-    #CalTimeOffset = 43.
     CalTimeOffset = 24.
-    #eleTrackTimeBias = 28.9
-    #posTrackTimeBias = 28.9
     eleTrackTimeBias = 35.1 #55 for no spacing
     posTrackTimeBias = 35.1 #55 for no spacing
     vtxana.parameters["v0ProjectionFitsCfg"] = os.environ['HPSTR_BASE'] + "/analysis/data/v0_projection_2021_mc_signal_config.json"
@@ -88,7 +87,7 @@ if (options.year == 2019):
     vtxana.parameters["regionDefinitions"] = [RegionPath+'Tight_2019.json', RegionPath+'Tight_pTop_2019.json', RegionPath+'Tight_pBot_2019.json']
 if (options.year == 2021):
     if (options.isData == 1):
-        vtxana.parameters["regionDefinitions"] = [RegionPath+'preselectionCuts/sanity_cuts.json', RegionPath+'preselectionCuts/all_cuts.json', RegionPath+'Tight_2021.json']
+        vtxana.parameters["regionDefinitions"] = [RegionPath+'preselectionCuts/sanity_cuts.json', RegionPath+'preselectionCuts/all_cuts.json', RegionPath+'empty.json']
     elif (options.isData == 0):
         vtxana.parameters["regionDefinitions"] = [RegionPath+'preselectionCuts/sanity_cuts.json', RegionPath+'preselectionCuts/all_cuts_MC.json', RegionPath+'Tight_2021_MC.json']
 # Sequence which the processors will run.

@@ -104,13 +104,13 @@ bool MCParticleProcessor::process(IEvent* ievent) {
             particle->setMomPDG(parentVec.at(parentVec.size()-1)->getPDG());
             while (parentVec.size() > 0) {
                 if (parentVec.at(parentVec.size()-1)->getPDG() == 622 || parentVec.at(parentVec.size()-1)->getPDG() == 623) {
-                    particle->setOriginPDG(parentVec.at(parentVec.size()-1)->getPDG());
+                    particle->SetOriginPDG(parentVec.at(parentVec.size()-1)->getPDG());
                     break;
                 }
                 parentVec = parentVec.at(parentVec.size()-1)->getParents();
             }
         }
-        
+
         // Set the generator status of the particle
         particle->setGenStatus(lc_particle->getGeneratorStatus());    
 

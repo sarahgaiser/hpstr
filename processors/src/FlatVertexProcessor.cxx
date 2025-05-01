@@ -109,6 +109,11 @@ void FlatVertexProcessor::initialize(TTree* tree) {
         _reg_tuples[regname]->addVariable("unc_vtx_y");
         _reg_tuples[regname]->addVariable("unc_vtx_ele_pos_clus_dt");
         _reg_tuples[regname]->addVariable("run_number");
+	_reg_tuples[regname]->addVariable("event_number");
+	_reg_tuples[regname]->addVariable("singles0trigger");
+	_reg_tuples[regname]->addVariable("singles1trigger");
+	_reg_tuples[regname]->addVariable("singles2trigger");
+	_reg_tuples[regname]->addVariable("singles3trigger");
         _reg_tuples[regname]->addVariable("unc_vtx_cxx");
         _reg_tuples[regname]->addVariable("unc_vtx_cyy");
         _reg_tuples[regname]->addVariable("unc_vtx_czz");
@@ -201,6 +206,8 @@ void FlatVertexProcessor::initialize(TTree* tree) {
             _reg_tuples[regname]->addVariable("L2hitCode");
             _reg_tuples[regname]->addVariable("momPDG_ele");
             _reg_tuples[regname]->addVariable("momPDG_pos");
+            _reg_tuples[regname]->addVariable("originPDG_ele");
+            _reg_tuples[regname]->addVariable("originPDG_pos");
         }
 
         _regions.push_back(regname);
@@ -317,8 +324,16 @@ bool FlatVertexProcessor::process(IEvent* ievent) {
         if (isData_) {
             if (!vtxSelector->passCutEq("Pair1_eq", (int)evth_->isPair1Trigger(),weight))
                 break;
-	    if (!vtxSelector->passCutEq("Singles1_eq", (int)ts_->prescaled.Single_1_Top, weight) || !vtxSelector->passCutEq("Singles1_eq", (int)ts_->prescaled.Single_1_Bot, weight))
+	    if (!vtxSelector->passCutEq("Singles0_eq", (int)ts_->isSingles0Trigger(), weight))
 		break;
+	    if (!vtxSelector->passCutEq("Singles1_eq", (int)ts_->isSingles1Trigger(), weight))
+                break;
+	    if (!vtxSelector->passCutEq("Singles2_eq", (int)ts_->isSingles2Trigger(), weight))
+                break;
+	    if (!vtxSelector->passCutEq("Singles3_eq", (int)ts_->isSingles3Trigger(), weight))
+                break;
+	    if (!vtxSelector->passCutEq("Singles2or3_eq", (int)(ts_->isSingles2Trigger() || ts_->isSingles3Trigger()), weight))
+                break;
         }
 
         bool foundParts = _ah->GetParticlesFromVtx(vtx, ele, pos);
@@ -364,7 +379,7 @@ bool FlatVertexProcessor::process(IEvent* ievent) {
         pos_trk.applyCorrection("z0", beamPosCorrections_.at(1));
         // Track Time Corrections
         double corr_eleTrackTime = ele_trk.getTrackTime() + eleTrackTimeBias_;
-	    double corr_posTrackTime = pos_trk.getTrackTime() + posTrackTimeBias_;
+	double corr_posTrackTime = pos_trk.getTrackTime() + posTrackTimeBias_;
 
 	    // Correct for the momentum bias
         if (biasingTool_) {
@@ -460,6 +475,10 @@ bool FlatVertexProcessor::process(IEvent* ievent) {
 
         //Pos Track-Cluster Time Difference
         if (!vtxSelector->passCutLt("posTrkCluTimeDiff_lt", fabs(corr_posClusterTime - corr_posClusterTime), weight))
+            continue;
+
+	// Ele Pos Track Time Difference
+        if (!vtxSelector->passCutLt("eleposTrkTimeDiff_lt", fabs(corr_eleTrackTime - corr_posTrackTime), weight))
             continue;
 
         TVector3 ele_mom;
@@ -590,7 +609,7 @@ bool FlatVertexProcessor::process(IEvent* ievent) {
             Track* pos_trk_ptr;
             Track ele_trk;
             Track pos_trk;
-        
+      
             if (!trkColl_.empty()) {
                 bool foundTracks = _ah->MatchToGBLTracks((ele->getTrack()).getID(),(pos->getTrack()).getID(),
                         ele_trk_ptr, pos_trk_ptr, *trks_);
@@ -694,7 +713,18 @@ bool FlatVertexProcessor::process(IEvent* ievent) {
             if (isData_) {
                 if (!_reg_vtx_selectors[region]->passCutEq("Pair1_eq", (int)evth_->isPair1Trigger(), weight))
                     break;
+		if (!_reg_vtx_selectors[region]->passCutEq("Singles0_eq", (int)ts_->isSingles0Trigger(), weight))
+                    break;
+            	if (!_reg_vtx_selectors[region]->passCutEq("Singles1_eq", (int)ts_->isSingles1Trigger(), weight))
+                    break;
+            	if (!_reg_vtx_selectors[region]->passCutEq("Singles2_eq", (int)ts_->isSingles2Trigger(), weight))
+                    break;
+            	if (!_reg_vtx_selectors[region]->passCutEq("Singles3_eq", (int)ts_->isSingles3Trigger(), weight))
+		    break;
+		if (!_reg_vtx_selectors[region]->passCutEq("Singles2or3_eq", (int)(ts_->isSingles2Trigger() || ts_->isSingles3Trigger()), weight))
+                    break;
             }
+
             // Ele Track Time
             if (!_reg_vtx_selectors[region]->passCutLt("eleTrkTime_lt", fabs(corr_eleTrackTime), weight))
                 continue;
@@ -745,6 +775,10 @@ bool FlatVertexProcessor::process(IEvent* ievent) {
 
             // Pos Track-Cluster Time Difference
             if (!_reg_vtx_selectors[region]->passCutLt("posTrkCluTimeDiff_lt", fabs(corr_posTrackTime - corr_posClusterTime), weight))
+                continue;
+
+	    // Ele Pos Track Time Difference
+            if (!_reg_vtx_selectors[region]->passCutLt("eleposTrkTimeDiff_lt", fabs(corr_eleTrackTime - corr_posTrackTime), weight))
                 continue;
 
             TVector3 ele_mom;
@@ -936,7 +970,7 @@ bool FlatVertexProcessor::process(IEvent* ievent) {
                     float truePosE = -1;
                     for (int i = 0; i < mcParts_->size(); i++)
                     {
-                        int momPDG = mcParts_->at(i)->getMomPDG();
+                        int momPDG = mcParts_->at(i)->getOriginPDG();
                         if (mcParts_->at(i)->getPDG() == 11 && momPDG == isRadPDG_)
                         {
                             std::vector<double> lP = mcParts_->at(i)->getMomentum();
@@ -1175,12 +1209,21 @@ bool FlatVertexProcessor::process(IEvent* ievent) {
 
             int momPDG_ele = -999;
             int momPDG_pos = -999;
+            int originPDG_ele = -999;
+            int originPDG_pos = -999;
 
             if (mcParts_) {    
                 for (int i = 0; i < mcParts_->size(); i++) {    
                     int momPDG = mcParts_->at(i)->getMomPDG();
-                    if (mcParts_->at(i)->getPDG() == 11) momPDG_ele = momPDG;
-                    if (mcParts_->at(i)->getPDG() == -11) momPDG_pos = momPDG;
+                    int originPDG = mcParts_->at(i)->getOriginPDG();
+                    if (mcParts_->at(i)->getPDG() == 11) {
+                        momPDG_ele = momPDG;
+                        originPDG_ele = originPDG;
+                    }
+                    if (mcParts_->at(i)->getPDG() == -11) {
+                        momPDG_pos = momPDG;
+                        originPDG_pos = originPDG;
+                    }
                 }
             }
             
@@ -1197,13 +1240,15 @@ bool FlatVertexProcessor::process(IEvent* ievent) {
                 _reg_tuples[region]->setVariableValue("L2hitCode", float(L2hitCode));
                 _reg_tuples[region]->setVariableValue("momPDG_ele", int(momPDG_ele));
                 _reg_tuples[region]->setVariableValue("momPDG_pos", int(momPDG_pos));
+                _reg_tuples[region]->setVariableValue("originPDG_ele", int(originPDG_ele));
+                _reg_tuples[region]->setVariableValue("originPDG_pos", int(originPDG_pos));
             }
 
             _reg_tuples[region]->setVariableValue("unc_vtx_mass", vtx->getInvMass());
             _reg_tuples[region]->setVariableValue("unc_vtx_z"   , vtxPosSvt.Z());
             _reg_tuples[region]->setVariableValue("unc_vtx_chi2", vtx->getChi2());
             _reg_tuples[region]->setVariableValue("unc_vtx_psum", p_ele.P() + p_pos.P());
-            _reg_tuples[region]->setVariableValue("unc_vtx_px", vtx->getP().X());
+	    _reg_tuples[region]->setVariableValue("unc_vtx_px", vtx->getP().X());
             _reg_tuples[region]->setVariableValue("unc_vtx_py", vtx->getP().Y());
             _reg_tuples[region]->setVariableValue("unc_vtx_pz", vtx->getP().Z());
             _reg_tuples[region]->setVariableValue("unc_vtx_x", vtx->getX());
@@ -1273,6 +1318,11 @@ bool FlatVertexProcessor::process(IEvent* ievent) {
             _reg_tuples[region]->setVariableValue("unc_vtx_pos_clust_x", posClus.getPosition().at(0));
             _reg_tuples[region]->setVariableValue("unc_vtx_pos_clust_corr_t",corr_posClusterTime);
             _reg_tuples[region]->setVariableValue("run_number", evth_->getRunNumber());
+	    _reg_tuples[region]->setVariableValue("event_number", evth_->getEventNumber());
+	    _reg_tuples[region]->setVariableValue("singles0trigger", (int)ts_->isSingles0Trigger());
+	    _reg_tuples[region]->setVariableValue("singles1trigger", (int)ts_->isSingles1Trigger());
+	    _reg_tuples[region]->setVariableValue("singles2trigger", (int)ts_->isSingles2Trigger());
+	    _reg_tuples[region]->setVariableValue("singles3trigger", (int)ts_->isSingles3Trigger());
 
             _reg_tuples[region]->setVariableValue("unc_vtx_ele_track_ecal_x", ele_trk.getPositionAtEcal().at(0));
             _reg_tuples[region]->setVariableValue("unc_vtx_ele_track_ecal_y", ele_trk.getPositionAtEcal().at(1));
