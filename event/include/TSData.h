@@ -73,6 +73,22 @@ class TSData : public TObject {
         TSData();
         ~TSData();
 
+	bool isSingles0Trigger() {
+	    return (prescaled.Single_0_Top == 1 || prescaled.Single_0_Bot == 1);
+	};
+
+	bool isSingles1Trigger() {
+            return (prescaled.Single_1_Top == 1 || prescaled.Single_1_Bot == 1);
+        };
+
+	bool isSingles2Trigger() {
+            return (prescaled.Single_2_Top == 1 || prescaled.Single_2_Bot == 1);
+        };
+
+	bool isSingles3Trigger() {
+            return (prescaled.Single_3_Top == 1 || prescaled.Single_3_Bot == 1);
+        };
+
         void print();
 
         void Clear(){
