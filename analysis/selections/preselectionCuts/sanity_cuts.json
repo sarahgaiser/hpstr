@@ -1,17 +1,22 @@
 {
+    "Singles2or3_eq" : {
+        "cut"  : 1,
+        "id"   : 0,
+        "info" : "Single2 or Single3"
+    },
     "posClusE_gt": {
         "cut" : 0.2,
-        "id"  : 0,
-        "info" : "E_{e^{+}, cluster} > 0.2 GeV"
+        "id"  : 1,
+        "info" : "E_{e^{+}, cluster} > 0.2GeV"
     },
     "eleMom_lt" : {
         "cut" : 2.9,
-        "id"  : 1,
-        "info" : "p_{e^{-}} < 2.9 GeV"
+        "id"  : 2,
+        "info" : "p_{e^{-}} < 2.9GeV"
     },
     "maxVtxMom_lt" : {
         "cut" : 4.0,
-        "id"  : 2,
-        "info" : "p_{vtx} < 4.0 GeV"
+        "id"  : 3,
+        "info" : "p_{vtx} < 4.0GeV"
     }
 }
