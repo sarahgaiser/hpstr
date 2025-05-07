@@ -548,14 +548,18 @@ def MakeStackPlot(name, outdir, histos, legends, oFext, xtitle="", ytitle="a.u."
     for ih in range(len(histos)):
         if Ymax < histos[ih].GetMaximum()*1.9:
             Ymax = histos[ih].GetMaximum()*1.9
-    
+   
+    h_max = 0
     for ih in range(len(histos)):
         if (Normalise):
             if (histos[ih].Integral() == 0):
                 return None
             if len(scaling_factors) == len(histos):
-                if float(scaling_factors[ih]) != 0:
+                if float(scaling_factors[ih]) > 0:
+                    print(scaling_factors[ih])
                     histos[ih].Scale(float(scaling_factors[ih])/histos[ih].Integral())
+                    if histos[ih].GetMaximum() > h_max:
+                        h_max = histos[ih].GetMaximum()
             else:
                 histos[ih].Scale(1./histos[ih].Integral())
 
@@ -583,6 +587,9 @@ def MakeStackPlot(name, outdir, histos, legends, oFext, xtitle="", ytitle="a.u."
         if RebinFactor > 0:
             histos[ih].Rebin(RebinFactor)
 
+
+    hs.SetMaximum(h_max)
+    histos[0].SetMaximum(h_max)
     ratioPlot = r.TRatioPlot(hs, histos[0])
     ratioPlot.GetXaxis().SetLabelSize(0.01)
     ratioPlot.Draw()
