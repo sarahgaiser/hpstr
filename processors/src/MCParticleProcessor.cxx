@@ -102,13 +102,13 @@ bool MCParticleProcessor::process(IEvent* ievent) {
         std::vector<EVENT::MCParticle*> parentVec = lc_particle->getParents();
         if(parentVec.size() > 0) {
             particle->setMomPDG(parentVec.at(parentVec.size()-1)->getPDG());
-            while (parentVec.size() > 0) {
-                if (parentVec.at(parentVec.size()-1)->getPDG() == 622 || parentVec.at(parentVec.size()-1)->getPDG() == 623) {
-                    particle->SetOriginPDG(parentVec.at(parentVec.size()-1)->getPDG());
-                    break;
-                }
-                parentVec = parentVec.at(parentVec.size()-1)->getParents();
-            }
+            // while (parentVec.size() > 0) {
+            //     if (parentVec.at(parentVec.size()-1)->getPDG() == 622 || parentVec.at(parentVec.size()-1)->getPDG() == 623) {
+            //         particle->SetOriginPDG(parentVec.at(parentVec.size()-1)->getPDG());
+            //         break;
+            //     }
+            //     parentVec = parentVec.at(parentVec.size()-1)->getParents();
+            // }
         }
 
         // Set the generator status of the particle

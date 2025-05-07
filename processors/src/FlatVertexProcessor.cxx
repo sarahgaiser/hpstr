@@ -185,10 +185,12 @@ void FlatVertexProcessor::initialize(TTree* tree) {
         // clust vars
         _reg_tuples[regname]->addVariable("unc_vtx_ele_clust_E");
         _reg_tuples[regname]->addVariable("unc_vtx_ele_clust_x");
+        _reg_tuples[regname]->addVariable("unc_vtx_ele_clust_y");
         _reg_tuples[regname]->addVariable("unc_vtx_ele_clust_corr_t");
 
         _reg_tuples[regname]->addVariable("unc_vtx_pos_clust_E");
         _reg_tuples[regname]->addVariable("unc_vtx_pos_clust_x");
+        _reg_tuples[regname]->addVariable("unc_vtx_pos_clust_y");
         _reg_tuples[regname]->addVariable("unc_vtx_pos_clust_corr_t");
 
         if(!isData_)
@@ -970,7 +972,7 @@ bool FlatVertexProcessor::process(IEvent* ievent) {
                     float truePosE = -1;
                     for (int i = 0; i < mcParts_->size(); i++)
                     {
-                        int momPDG = mcParts_->at(i)->getOriginPDG();
+                        int momPDG = mcParts_->at(i)->getMomPDG();
                         if (mcParts_->at(i)->getPDG() == 11 && momPDG == isRadPDG_)
                         {
                             std::vector<double> lP = mcParts_->at(i)->getMomentum();
@@ -1215,14 +1217,14 @@ bool FlatVertexProcessor::process(IEvent* ievent) {
             if (mcParts_) {    
                 for (int i = 0; i < mcParts_->size(); i++) {    
                     int momPDG = mcParts_->at(i)->getMomPDG();
-                    int originPDG = mcParts_->at(i)->getOriginPDG();
+                    // int originPDG = mcParts_->at(i)->getOriginPDG();
                     if (mcParts_->at(i)->getPDG() == 11) {
                         momPDG_ele = momPDG;
-                        originPDG_ele = originPDG;
+                        // originPDG_ele = originPDG;
                     }
                     if (mcParts_->at(i)->getPDG() == -11) {
                         momPDG_pos = momPDG;
-                        originPDG_pos = originPDG;
+                        // originPDG_pos = originPDG;
                     }
                 }
             }
@@ -1312,17 +1314,19 @@ bool FlatVertexProcessor::process(IEvent* ievent) {
             //clust vars
             _reg_tuples[region]->setVariableValue("unc_vtx_ele_clust_E", eleClus.getEnergy());
             _reg_tuples[region]->setVariableValue("unc_vtx_ele_clust_x", eleClus.getPosition().at(0));
+            _reg_tuples[region]->setVariableValue("unc_vtx_ele_clust_y", eleClus.getPosition().at(1));
             _reg_tuples[region]->setVariableValue("unc_vtx_ele_clust_corr_t",corr_eleClusterTime);
 
             _reg_tuples[region]->setVariableValue("unc_vtx_pos_clust_E", posClus.getEnergy());
             _reg_tuples[region]->setVariableValue("unc_vtx_pos_clust_x", posClus.getPosition().at(0));
+            _reg_tuples[region]->setVariableValue("unc_vtx_pos_clust_y", posClus.getPosition().at(1));
             _reg_tuples[region]->setVariableValue("unc_vtx_pos_clust_corr_t",corr_posClusterTime);
             _reg_tuples[region]->setVariableValue("run_number", evth_->getRunNumber());
-	    _reg_tuples[region]->setVariableValue("event_number", evth_->getEventNumber());
-	    _reg_tuples[region]->setVariableValue("singles0trigger", (int)ts_->isSingles0Trigger());
-	    _reg_tuples[region]->setVariableValue("singles1trigger", (int)ts_->isSingles1Trigger());
-	    _reg_tuples[region]->setVariableValue("singles2trigger", (int)ts_->isSingles2Trigger());
-	    _reg_tuples[region]->setVariableValue("singles3trigger", (int)ts_->isSingles3Trigger());
+            _reg_tuples[region]->setVariableValue("event_number", evth_->getEventNumber());
+            _reg_tuples[region]->setVariableValue("singles0trigger", (int)ts_->isSingles0Trigger());
+            _reg_tuples[region]->setVariableValue("singles1trigger", (int)ts_->isSingles1Trigger());
+            _reg_tuples[region]->setVariableValue("singles2trigger", (int)ts_->isSingles2Trigger());
+            _reg_tuples[region]->setVariableValue("singles3trigger", (int)ts_->isSingles3Trigger());
 
             _reg_tuples[region]->setVariableValue("unc_vtx_ele_track_ecal_x", ele_trk.getPositionAtEcal().at(0));
             _reg_tuples[region]->setVariableValue("unc_vtx_ele_track_ecal_y", ele_trk.getPositionAtEcal().at(1));
