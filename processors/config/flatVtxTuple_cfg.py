@@ -87,9 +87,11 @@ if (options.year == 2019):
     vtxana.parameters["regionDefinitions"] = [RegionPath+'Tight_2019.json', RegionPath+'Tight_pTop_2019.json', RegionPath+'Tight_pBot_2019.json']
 if (options.year == 2021):
     if (options.isData == 1):
-        vtxana.parameters["regionDefinitions"] = [RegionPath+'preselectionCuts/sanity_cuts.json', RegionPath+'preselectionCuts/all_cuts.json', RegionPath+'empty.json']
+        # vtxana.parameters["regionDefinitions"] = [RegionPath+'preselectionCuts/sanity_cuts.json', RegionPath+'preselectionCuts/all_cuts.json', RegionPath+'empty.json']
+        vtxana.parameters["regionDefinitions"] = [RegionPath+'preselectionCuts/cluster_free_cuts.json', RegionPath+'preselectionCuts/all_cuts.json', RegionPath+'empty.json']
     elif (options.isData == 0):
-        vtxana.parameters["regionDefinitions"] = [RegionPath+'preselectionCuts/sanity_cuts.json', RegionPath+'preselectionCuts/all_cuts_MC.json', RegionPath+'Tight_2021_MC.json']
+        # vtxana.parameters["regionDefinitions"] = [RegionPath+'preselectionCuts/sanity_cuts.json', RegionPath+'preselectionCuts/all_cuts_MC.json', RegionPath+'empty.json']
+        vtxana.parameters["regionDefinitions"] = [RegionPath+'preselectionCuts/cluster_free_cuts_MC.json', RegionPath+'preselectionCuts/all_cuts_MC.json', RegionPath+'empty.json']
 # Sequence which the processors will run.
 p.sequence = [vtxana]
 

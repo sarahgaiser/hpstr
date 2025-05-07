@@ -20,9 +20,9 @@
         "info" : "#Delta(t_{e^{+},trk}, t_{e^{+},clu}) < 5.2ns"
     },
     "eleposTrkTimeDiff_lt" :{
-	"cut"  : 9.0,
-	"id"   : 4,
-	"info" : "#Delta(t_{e^{-},trk}, t_{e^{+},trk}) < 9.0ns"
+        "cut"  : 9.0,
+        "id"   : 4,
+        "info" : "#Delta(t_{e^{-},trk}, t_{e^{+},trk}) < 9.0ns"
     },
     "eleTrkChi2Ndf_lt" : {
         "cut"  : 20,
