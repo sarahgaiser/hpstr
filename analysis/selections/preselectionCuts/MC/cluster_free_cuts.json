@@ -1,72 +1,57 @@
 {
-    "Singles2or3_eq" : {
+    "Singles3_eq" : {
         "cut"  : 1,
         "id"   : 0,
-        "info" : "Single2 or Single3"
-    },
-    "posClusE_gt" : {
-    	"cut"  : 0.2,
-        "id"   : 1,
-        "info" : "E_{e^{+},clu} > 0.2GeV"
-    },
-    "eleTrkCluTimeDiff_lt" : {
-    	"cut"  : 3.0,
-        "id"   : 2,
-        "info" : "#Delta(t_{e^{-},trk}, t_{e^{+},clu}) < 3.0ns"
-    },
-    "posTrkCluTimeDiff_lt" : {
-        "cut"  : 3.0,
-        "id"   : 3,
-        "info" : "#Delta(t_{e^{+},trk}, t_{e^{+},clu}) < 3.0ns"
+        "info" : "Single3"
     },
     "eleposTrkTimeDiff_lt" :{
         "cut"  : 4.2,
-        "id"   : 4,
+        "id"   : 1,
         "info" : "#Delta(t_{e^{-},trk}, t_{e^{+},trk}) < 4.2ns"
     },
     "eleTrkChi2Ndf_lt" : {
         "cut"  : 20,
-        "id"   : 5,
+        "id"   : 2,
         "info" : "e^{-} Track #chi^{2}/ndf < 20"
     },
     "posTrkChi2Ndf_lt" : {
         "cut"  : 20,
-        "id"   : 6,
+        "id"   : 3,
         "info" : "e^{+} Track #chi^{2}/ndf < 20"
     },
     "eleMom_lt" : {
         "cut" : 2.9,
-        "id"  : 7,
+        "id"  : 4,
         "info" : "p_{e^{-}} < 2.9GeV"
     },
     "eleMom_gt" : {
         "cut" : 0.4,
-        "id"  : 8,
+        "id"  : 5,
         "info" : "p_{e^{-}} > 0.4GeV"
     },
     "posMom_gt" : {
         "cut" : 0.4,
-        "id"  : 9,
+        "id"  : 6,
         "info" : "p_{e^{+}} > 0.4GeV"
     },
     "eleN2Dhits_gt" : {
         "cut"  : 9,
-        "id"   : 10,
+        "id"   : 7,
         "info" : "e^{-} track N_{2d hits} #geq 9"
     },
     "posN2Dhits_gt" : {
         "cut"  : 9,
-        "id"   : 11,
+        "id"   : 8,
         "info" : "e^{+} track N_{2d hits} #geq 9"
     },
     "chi2unc_lt" : {
         "cut"   : 20,
-        "id"    : 12,
+        "id"    : 9,
         "info"  : "#chi^{2}_{unc} < 20"
     },
     "maxVtxMom_lt" : {
         "cut" : 4.0,
-        "id"  : 13,
+        "id"  : 10,
         "info" : "p_{vtx} < 4.0GeV"
     }
 }
