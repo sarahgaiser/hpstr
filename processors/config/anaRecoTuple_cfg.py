@@ -37,8 +37,8 @@ recoana = HpstrConf.Processor('recoana', 'RecoHitAnaProcessor')
 #RecoHitAna
 recoana.parameters["debug"] = 0
 recoana.parameters["anaName"] = "recoHitAna"
-recoana.parameters["trkColl"] = "GBLTracks"
-recoana.parameters["trkrHitColl"] = "RotatedHelicalTrackHits"
+recoana.parameters["trkColl"] = "KalmanFullTracks"
+recoana.parameters["trkrHitColl"] = "SVTRawHitsOnTrack_KF"
 recoana.parameters["ecalHitColl"] = "RecoEcalHits"
 recoana.parameters["ecalClusColl"] = "RecoEcalClusters"
 recoana.parameters["histCfg"] = os.environ['HPSTR_BASE']+'/analysis/plotconfigs/reco/basicRecoHit.json'
