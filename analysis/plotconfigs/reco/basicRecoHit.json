@@ -47,5 +47,12 @@
         "maxX" : 3000,
         "xtitle" : "Reco Ecal Cluster Energy [MeV]",
         "ytitle" : "Clusters / 20 MeV"
+    },
+    "ecalClusterSeedEnergy_h" : {
+        "bins" : 150,
+        "minX" : 0,
+        "maxX" : 3000,
+        "xtitle" : "Reco Ecal Cluster Energy [MeV]",
+        "ytitle" : "Clusters / 20 MeV"
     }
 }

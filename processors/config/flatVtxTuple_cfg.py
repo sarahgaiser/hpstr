@@ -62,7 +62,7 @@ if (options.isData == 1):
     CalTimeOffset = 37.3
     eleTrackTimeBias = 0.2
     posTrackTimeBias = 0.0
-    #vtxana.parameters["v0ProjectionFitsCfg"] = os.environ['HPSTR_BASE'] + "/analysis/data/v0_projection_2021_config.json"
+    vtxana.parameters["v0ProjectionFitsCfg"] = os.environ['HPSTR_BASE'] + "/analysis/data/v0_projection_2021_config.json"
     print("Running on data file: Setting CalTimeOffset %d" % CalTimeOffset)
 
 elif (options.isData == 0):
@@ -87,11 +87,9 @@ if (options.year == 2019):
     vtxana.parameters["regionDefinitions"] = [RegionPath+'Tight_2019.json', RegionPath+'Tight_pTop_2019.json', RegionPath+'Tight_pBot_2019.json']
 if (options.year == 2021):
     if (options.isData == 1):
-        # vtxana.parameters["regionDefinitions"] = [RegionPath+'preselectionCuts/sanity_cuts.json', RegionPath+'preselectionCuts/all_cuts.json', RegionPath+'empty.json']
-        vtxana.parameters["regionDefinitions"] = [RegionPath+'preselectionCuts/cluster_free_cuts.json', RegionPath+'preselectionCuts/all_cuts.json', RegionPath+'empty.json']
+        vtxana.parameters["regionDefinitions"] = [RegionPath+'preselectionCuts/preselection_cuts.json', RegionPath+'preselectionCuts/all_but_time_cuts.json', RegionPath+'empty.json']
     elif (options.isData == 0):
-        # vtxana.parameters["regionDefinitions"] = [RegionPath+'preselectionCuts/sanity_cuts.json', RegionPath+'preselectionCuts/all_cuts_MC.json', RegionPath+'empty.json']
-        vtxana.parameters["regionDefinitions"] = [RegionPath+'preselectionCuts/cluster_free_cuts_MC.json', RegionPath+'preselectionCuts/all_cuts_MC.json', RegionPath+'empty.json']
+        vtxana.parameters["regionDefinitions"] = [RegionPath+'preselectionCuts/MC/preselection_cuts.json', RegionPath+'preselectionCuts/all_but_time_cuts.json', RegionPath+'empty.json']
 # Sequence which the processors will run.
 p.sequence = [vtxana]
 

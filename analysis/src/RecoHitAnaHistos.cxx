@@ -37,5 +37,8 @@ void RecoHitAnaHistos::FillEcalClusters(std::vector<CalCluster*> *ecalClusters, 
     {
         CalCluster *cluster = ecalClusters->at(i);
         Fill1DHisto("ecalClusterEnergy_h", cluster->getEnergy()*1000.0, weight); // Scaled to MeV
+	CalHit *hit = static_cast<CalHit*>(cluster->getSeed());
+	double energy = hit->getEnergy();
+	Fill1DHisto("ecalClusterSeedEnergy_h", energy*1000.0, weight);
     }
 }

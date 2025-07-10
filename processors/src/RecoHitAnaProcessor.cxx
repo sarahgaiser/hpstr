@@ -38,7 +38,7 @@ void RecoHitAnaProcessor::initialize(TTree* tree) {
     histos->DefineHistos();
 
     // init TTree
-    tree_->SetBranchAddress(trkrHitColl_.c_str()  , &trkrHits_    , &btrkrHits_    );
+//    tree_->SetBranchAddress(trkrHitColl_.c_str()  , &trkrHits_    , &btrkrHits_    );
     tree_->SetBranchAddress(trkColl_.c_str()      , &tracks_      , &btracks_      );
     tree_->SetBranchAddress(ecalHitColl_.c_str()  , &ecalHits_    , &becalHits_    );
     tree_->SetBranchAddress(ecalClusColl_.c_str() , &ecalClusters_, &becalClusters_);
@@ -47,7 +47,7 @@ void RecoHitAnaProcessor::initialize(TTree* tree) {
 
 bool RecoHitAnaProcessor::process(IEvent* ievent) {
 
-    histos->FillTrackerHits(trkrHits_);
+  //  histos->FillTrackerHits(trkrHits_);
     histos->FillTracks(tracks_);
     histos->FillEcalHits(ecalHits_);
     histos->FillEcalClusters(ecalClusters_);

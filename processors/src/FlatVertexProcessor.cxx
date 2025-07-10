@@ -107,13 +107,13 @@ void FlatVertexProcessor::initialize(TTree* tree) {
         _reg_tuples[regname]->addVariable("unc_vtx_pz");
         _reg_tuples[regname]->addVariable("unc_vtx_x");
         _reg_tuples[regname]->addVariable("unc_vtx_y");
-        _reg_tuples[regname]->addVariable("unc_vtx_ele_pos_clus_dt");
+        _reg_tuples[regname]->addVariable("unc_vtx_ele_pos_clust_dt");
         _reg_tuples[regname]->addVariable("run_number");
-	_reg_tuples[regname]->addVariable("event_number");
-	_reg_tuples[regname]->addVariable("singles0trigger");
-	_reg_tuples[regname]->addVariable("singles1trigger");
-	_reg_tuples[regname]->addVariable("singles2trigger");
-	_reg_tuples[regname]->addVariable("singles3trigger");
+        _reg_tuples[regname]->addVariable("event_number");
+        _reg_tuples[regname]->addVariable("singles0trigger");
+        _reg_tuples[regname]->addVariable("singles1trigger");
+        _reg_tuples[regname]->addVariable("singles2trigger");
+        _reg_tuples[regname]->addVariable("singles3trigger");
         _reg_tuples[regname]->addVariable("unc_vtx_cxx");
         _reg_tuples[regname]->addVariable("unc_vtx_cyy");
         _reg_tuples[regname]->addVariable("unc_vtx_czz");
@@ -147,8 +147,9 @@ void FlatVertexProcessor::initialize(TTree* tree) {
         _reg_tuples[regname]->addVariable("unc_vtx_ele_track_L1_isolation");
         _reg_tuples[regname]->addVariable("unc_vtx_ele_track_nhits");
         _reg_tuples[regname]->addVariable("unc_vtx_ele_track_lastlayer");
-        _reg_tuples[regname]->addVariable("unc_vtx_ele_track_si0");
-        _reg_tuples[regname]->addVariable("unc_vtx_ele_track_si1");
+        _reg_tuples[regname]->addVariable("unc_vtx_ele_track_L1");
+        _reg_tuples[regname]->addVariable("unc_vtx_ele_track_L2");
+        _reg_tuples[regname]->addVariable("unc_vtx_ele_track_L3");
         _reg_tuples[regname]->addVariable("unc_vtx_ele_track_ecal_x");
         _reg_tuples[regname]->addVariable("unc_vtx_ele_track_ecal_y");
         _reg_tuples[regname]->addVariable("unc_vtx_ele_track_z");
@@ -173,8 +174,8 @@ void FlatVertexProcessor::initialize(TTree* tree) {
         _reg_tuples[regname]->addVariable("unc_vtx_pos_track_L1_isolation");
         _reg_tuples[regname]->addVariable("unc_vtx_pos_track_nhits");
         _reg_tuples[regname]->addVariable("unc_vtx_pos_track_lastlayer");
-        _reg_tuples[regname]->addVariable("unc_vtx_pos_track_si0");
-        _reg_tuples[regname]->addVariable("unc_vtx_pos_track_si1");
+        _reg_tuples[regname]->addVariable("unc_vtx_pos_track_L1");
+        _reg_tuples[regname]->addVariable("unc_vtx_pos_track_L2");_reg_tuples[regname]->addVariable("unc_vtx_pos_track_L3");
         _reg_tuples[regname]->addVariable("unc_vtx_pos_track_ecal_x");
         _reg_tuples[regname]->addVariable("unc_vtx_pos_track_ecal_y");
         _reg_tuples[regname]->addVariable("unc_vtx_pos_track_z");
@@ -210,6 +211,8 @@ void FlatVertexProcessor::initialize(TTree* tree) {
             _reg_tuples[regname]->addVariable("momPDG_pos");
             _reg_tuples[regname]->addVariable("originPDG_ele");
             _reg_tuples[regname]->addVariable("originPDG_pos");
+            _reg_tuples[regname]->addVariable("unc_vtx_psum_true");
+            _reg_tuples[regname]->addVariable("unc_vtx_mass_true");
         }
 
         _regions.push_back(regname);
@@ -323,8 +326,8 @@ bool FlatVertexProcessor::process(IEvent* ievent) {
         Particle* ele = nullptr;
         Particle* pos = nullptr;
 
-        if (isData_) {
-            if (!vtxSelector->passCutEq("Pair1_eq", (int)evth_->isPair1Trigger(),weight))
+        // if (isData_) {
+        if (!vtxSelector->passCutEq("Pair1_eq", (int)evth_->isPair1Trigger(),weight))
                 break;
 	    if (!vtxSelector->passCutEq("Singles0_eq", (int)ts_->isSingles0Trigger(), weight))
 		break;
@@ -336,7 +339,7 @@ bool FlatVertexProcessor::process(IEvent* ievent) {
                 break;
 	    if (!vtxSelector->passCutEq("Singles2or3_eq", (int)(ts_->isSingles2Trigger() || ts_->isSingles3Trigger()), weight))
                 break;
-        }
+        // }
 
         bool foundParts = _ah->GetParticlesFromVtx(vtx, ele, pos);
         if (!foundParts) {
@@ -381,7 +384,7 @@ bool FlatVertexProcessor::process(IEvent* ievent) {
         pos_trk.applyCorrection("z0", beamPosCorrections_.at(1));
         // Track Time Corrections
         double corr_eleTrackTime = ele_trk.getTrackTime() + eleTrackTimeBias_;
-	double corr_posTrackTime = pos_trk.getTrackTime() + posTrackTimeBias_;
+	    double corr_posTrackTime = pos_trk.getTrackTime() + posTrackTimeBias_;
 
 	    // Correct for the momentum bias
         if (biasingTool_) {
@@ -574,6 +577,7 @@ bool FlatVertexProcessor::process(IEvent* ievent) {
 
         float truePsum = -1;
         float trueEsum = -1;
+	    float trueInvM = -1;
 
         for (auto vtx : selected_vtxs) {
 
@@ -663,32 +667,32 @@ bool FlatVertexProcessor::process(IEvent* ievent) {
 
             // Get the layers hit on each track
             std::vector<int> ele_hit_layers = ele_trk.getHitLayers();
-            int ele_Si0 = 0;
-            int ele_Si1 = 0;
+            std::vector<int> ele_hit_code = {0,0,0,0,0,0,0,0,0,0,0,0,0,0};
             int ele_lastlayer = 0;
+            
+            // std::cout << "ele_hit_layers: ";
             for(int i=0; i < ele_hit_layers.size(); i++)
             {
                 int layer = ele_hit_layers.at(i);
                 ele_lastlayer = layer;
-                if (layer == 0) ele_Si0++;
-                if (layer == 1) ele_Si1++;
+                ele_hit_code.at(layer) = 1;
+                // std::cout << layer << " ";
             }
+            // std::cout << std::endl;
 
             std::vector<int> pos_hit_layers = pos_trk.getHitLayers();
-            int pos_Si0 = 0;
-            int pos_Si1 = 0;
+            std::vector<int> pos_hit_code = {0,0,0,0,0,0,0,0,0,0,0,0,0,0};
             int pos_lastlayer = 0;
             for(int i=0; i < pos_hit_layers.size(); i++)
             {
                 int layer = pos_hit_layers.at(i);
                 pos_lastlayer = layer;
-                if (layer == 0) pos_Si0++;
-                if (layer == 1) pos_Si1++;
+                pos_hit_code.at(layer) = 1;
             }
 
             // Defining these here so they are in scope elsewhere
-            TVector3 trueEleP;
-            TVector3 truePosP;
+            TLorentzVector trueEleP;
+            TLorentzVector truePosP;
 
             if (debug_) {
                 std::cout << "Check on ele_Track" << std::endl;
@@ -712,20 +716,20 @@ bool FlatVertexProcessor::process(IEvent* ievent) {
             }
 
             // PRESELECTION CUTS
-            if (isData_) {
-                if (!_reg_vtx_selectors[region]->passCutEq("Pair1_eq", (int)evth_->isPair1Trigger(), weight))
+            // if (isData_) {
+            if (!_reg_vtx_selectors[region]->passCutEq("Pair1_eq", (int)evth_->isPair1Trigger(), weight))
                     break;
-		if (!_reg_vtx_selectors[region]->passCutEq("Singles0_eq", (int)ts_->isSingles0Trigger(), weight))
+		    if (!_reg_vtx_selectors[region]->passCutEq("Singles0_eq", (int)ts_->isSingles0Trigger(), weight))
                     break;
-            	if (!_reg_vtx_selectors[region]->passCutEq("Singles1_eq", (int)ts_->isSingles1Trigger(), weight))
-                    break;
-            	if (!_reg_vtx_selectors[region]->passCutEq("Singles2_eq", (int)ts_->isSingles2Trigger(), weight))
-                    break;
-            	if (!_reg_vtx_selectors[region]->passCutEq("Singles3_eq", (int)ts_->isSingles3Trigger(), weight))
-		    break;
-		if (!_reg_vtx_selectors[region]->passCutEq("Singles2or3_eq", (int)(ts_->isSingles2Trigger() || ts_->isSingles3Trigger()), weight))
-                    break;
-            }
+            if (!_reg_vtx_selectors[region]->passCutEq("Singles1_eq", (int)ts_->isSingles1Trigger(), weight))
+                break;
+            if (!_reg_vtx_selectors[region]->passCutEq("Singles2_eq", (int)ts_->isSingles2Trigger(), weight))
+                break;
+            if (!_reg_vtx_selectors[region]->passCutEq("Singles3_eq", (int)ts_->isSingles3Trigger(), weight))
+		        break;
+		    if (!_reg_vtx_selectors[region]->passCutEq("Singles2or3_eq", (int)(ts_->isSingles2Trigger() || ts_->isSingles3Trigger()), weight))
+                break;
+            // }
 
             // Ele Track Time
             if (!_reg_vtx_selectors[region]->passCutLt("eleTrkTime_lt", fabs(corr_eleTrackTime), weight))
@@ -749,6 +753,15 @@ bool FlatVertexProcessor::process(IEvent* ievent) {
 
             // Require Positron Cluster does NOT exists
             if (!_reg_vtx_selectors[region]->passCutLt("posClusE_lt", posClus.getEnergy(), weight))
+                continue;
+
+	    // Require Electron Cluster exists
+            if (!_reg_vtx_selectors[region]->passCutGt("eleClusE_gt", eleClus.getEnergy(), weight))
+                continue;
+
+
+            // Require Electron Cluster does NOT exists
+            if (!_reg_vtx_selectors[region]->passCutLt("eleClusE_lt", eleClus.getEnergy(), weight))
                 continue;
 
             double corr_eleClusterTime = ele->getCluster().getTime() - timeOffset_;
@@ -964,8 +977,8 @@ bool FlatVertexProcessor::process(IEvent* ievent) {
                 int isRecEle = -999;
 
 
-                trueEleP.SetXYZ(-999,-999,-999);
-                truePosP.SetXYZ(-999,-999,-999);
+                trueEleP.SetPxPyPzE(-999,-999,-999,-999);
+                truePosP.SetPxPyPzE(-999,-999,-999,-999);
 
                 if (mcParts_) {
                     float trueEleE = -1;
@@ -976,18 +989,19 @@ bool FlatVertexProcessor::process(IEvent* ievent) {
                         if (mcParts_->at(i)->getPDG() == 11 && momPDG == isRadPDG_)
                         {
                             std::vector<double> lP = mcParts_->at(i)->getMomentum();
-                            trueEleP.SetXYZ(lP[0],lP[1],lP[2]);
+                            trueEleP.SetPxPyPzE(lP[0],lP[1],lP[2], mcParts_->at(i)->getEnergy());
                             trueEleE = mcParts_->at(i)->getEnergy();
                         }
                         if (mcParts_->at(i)->getPDG() == -11 && momPDG == isRadPDG_)
                         {
                             std::vector<double> lP = mcParts_->at(i)->getMomentum();
-                            truePosP.SetXYZ(lP[0],lP[1],lP[2]);
+                            truePosP.SetPxPyPzE(lP[0],lP[1],lP[2], mcParts_->at(i)->getEnergy());
                             truePosE = mcParts_->at(i)->getEnergy();
                         }
                         if (trueEleP.X() != -999 && truePosP.X() != -999){
-                            truePsum =  trueEleP.Mag() + trueEleP.Mag();
+                            truePsum = trueEleP.P() + truePosP.P();
                             trueEsum = trueEleE + truePosE;
+			    trueInvM = (trueEleP + truePosP).Mag();
                         }
 
                         if (mcParts_->at(i)->getID() != maxID) continue;
@@ -996,11 +1010,11 @@ bool FlatVertexProcessor::process(IEvent* ievent) {
                         if (momPDG == 623) isRecEle = 1;
                     }
                 }
-                double momRatio = recEleP.Mag() / trueEleP.Mag();
-                double momAngle = trueEleP.Angle(recEleP) * TMath::RadToDeg();
+                double momRatio = recEleP.Mag() / trueEleP.P();
+//                double momAngle = trueEleP.Angle(recEleP) * TMath::RadToDeg();
                 if (!_reg_vtx_selectors[region]->passCutLt("momRatio_lt", momRatio, weight)) continue;
                 if (!_reg_vtx_selectors[region]->passCutGt("momRatio_gt", momRatio, weight)) continue;
-                if (!_reg_vtx_selectors[region]->passCutLt("momAngle_lt", momAngle, weight)) continue;
+ //               if (!_reg_vtx_selectors[region]->passCutLt("momAngle_lt", momAngle, weight)) continue;
 
                 if (!_reg_vtx_selectors[region]->passCutEq("isRadEle_eq", isRadEle, weight)) continue;
                 if (!_reg_vtx_selectors[region]->passCutEq("isNotRadEle_eq", isRadEle, weight)) continue;
@@ -1092,27 +1106,23 @@ bool FlatVertexProcessor::process(IEvent* ievent) {
 
             // Get the layers hit on each track
             std::vector<int> ele_hit_layers = ele_trk.getHitLayers();
-            int ele_Si0 = 0;
-            int ele_Si1 = 0;
+            std::vector<int> ele_hit_code = {0,0,0,0,0,0,0,0,0,0,0,0,0,0};
             int ele_lastlayer = 0;
             for (int i=0; i<ele_hit_layers.size(); i++)
             {
                 int layer = ele_hit_layers.at(i);
                 ele_lastlayer = layer;
-                if (layer == 0) ele_Si0++;
-                if (layer == 1) ele_Si1++;
+                ele_hit_code.at(layer) = 1;
             }
 
             std::vector<int> pos_hit_layers = pos_trk.getHitLayers();
-            int pos_Si0 = 0;
-            int pos_Si1 = 0;
+            std::vector<int> pos_hit_code = {0,0,0,0,0,0,0,0,0,0,0,0,0,0};
             int pos_lastlayer = 0;
             for (int i=0; i<pos_hit_layers.size(); i++)
             {
                 int layer = pos_hit_layers.at(i);
                 pos_lastlayer = layer;
-                if (layer == 0) pos_Si0++;
-                if (layer == 1) pos_Si1++;
+                pos_hit_code.at(i) = 1;
             }
 
             // Vertex Covariance
@@ -1213,22 +1223,48 @@ bool FlatVertexProcessor::process(IEvent* ievent) {
             int momPDG_pos = -999;
             int originPDG_ele = -999;
             int originPDG_pos = -999;
+	    TLorentzVector p_ele_true;
+            p_ele_true.SetPxPyPzE(-999., -999., -999., -999.);
+	    TLorentzVector p_pos_true;
+            p_pos_true.SetPxPyPzE(-999., -999., -999., -999.);
 
-            if (mcParts_) {    
-                for (int i = 0; i < mcParts_->size(); i++) {    
+	    float Psum_true = -999;
+	    float Esum_true = -999;
+	    float invM_true = -999;
+	    
+            if (mcParts_) {
+                float E_ele_true = -1;
+                float E_pos_true = -1;
+                for (int i = 0; i < mcParts_->size(); i++)
+                {
                     int momPDG = mcParts_->at(i)->getMomPDG();
-                    // int originPDG = mcParts_->at(i)->getOriginPDG();
-                    if (mcParts_->at(i)->getPDG() == 11) {
-                        momPDG_ele = momPDG;
-                        // originPDG_ele = originPDG;
+                    if (mcParts_->at(i)->getPDG() == 11 && momPDG == isRadPDG_)
+                    {
+			momPDG_ele = momPDG;
+                        //originPDG_ele = originPDG;
+                        std::vector<double> lP = mcParts_->at(i)->getMomentum();
+                        p_ele_true.SetPxPyPzE(lP[0],lP[1],lP[2], mcParts_->at(i)->getEnergy());
+                        E_ele_true = mcParts_->at(i)->getEnergy();
                     }
-                    if (mcParts_->at(i)->getPDG() == -11) {
-                        momPDG_pos = momPDG;
-                        // originPDG_pos = originPDG;
+                    if (mcParts_->at(i)->getPDG() == -11 && momPDG == isRadPDG_)
+                    {
+			momPDG_pos = momPDG;
+                        //originPDG_pos = originPDG;
+                        std::vector<double> lP = mcParts_->at(i)->getMomentum();
+                        p_pos_true.SetPxPyPzE(lP[0],lP[1],lP[2], mcParts_->at(i)->getEnergy());
+                        E_pos_true = mcParts_->at(i)->getEnergy();
                     }
+                    if (p_pos_true.X() != -999 && p_pos_true.X() != -999){
+                        Psum_true = p_ele_true.P() + p_pos_true.P();
+                        Esum_true = E_ele_true + E_pos_true;
+                        invM_true = (p_ele_true + p_pos_true).Mag();
+                    }
+
+                    //if (mcParts_->at(i)->getID() != maxID) continue;
                 }
             }
-            
+
+
             // Just for the selected vertex
             if (!isData_){
                 _reg_tuples[region]->setVariableValue("ap_true_vtx_z", apZ);
@@ -1244,6 +1280,8 @@ bool FlatVertexProcessor::process(IEvent* ievent) {
                 _reg_tuples[region]->setVariableValue("momPDG_pos", int(momPDG_pos));
                 _reg_tuples[region]->setVariableValue("originPDG_ele", int(originPDG_ele));
                 _reg_tuples[region]->setVariableValue("originPDG_pos", int(originPDG_pos));
+		_reg_tuples[region]->setVariableValue("unc_vtx_psum_true", Psum_true);
+		_reg_tuples[region]->setVariableValue("unc_vtx_mass_true", invM_true);
             }
 
             _reg_tuples[region]->setVariableValue("unc_vtx_mass", vtx->getInvMass());
@@ -1287,8 +1325,9 @@ bool FlatVertexProcessor::process(IEvent* ievent) {
             _reg_tuples[region]->setVariableValue("unc_vtx_ele_track_OmegaErr", ele_trk.getOmegaErr());
             _reg_tuples[region]->setVariableValue("unc_vtx_ele_track_nhits",ele2dHits);
             _reg_tuples[region]->setVariableValue("unc_vtx_ele_track_lastlayer",ele_lastlayer);
-            _reg_tuples[region]->setVariableValue("unc_vtx_ele_track_si0",ele_Si0);
-            _reg_tuples[region]->setVariableValue("unc_vtx_ele_track_si1",ele_Si1);
+            _reg_tuples[region]->setVariableValue("unc_vtx_ele_track_L1", ele_hit_code.at(0) && ele_hit_code.at(1));
+            _reg_tuples[region]->setVariableValue("unc_vtx_ele_track_L2", ele_hit_code.at(2) && ele_hit_code.at(3));
+            _reg_tuples[region]->setVariableValue("unc_vtx_ele_track_L3", ele_hit_code.at(4) && ele_hit_code.at(5));
             _reg_tuples[region]->setVariableValue("unc_vtx_ele_track_L1_isolation", ele_trk_iso_L1);
 
             _reg_tuples[region]->setVariableValue("unc_vtx_pos_track_p", pos_trk.getP());
@@ -1307,8 +1346,9 @@ bool FlatVertexProcessor::process(IEvent* ievent) {
             _reg_tuples[region]->setVariableValue("unc_vtx_pos_track_OmegaErr", pos_trk.getOmegaErr());
             _reg_tuples[region]->setVariableValue("unc_vtx_pos_track_nhits",pos2dHits);
             _reg_tuples[region]->setVariableValue("unc_vtx_pos_track_lastlayer",pos_lastlayer);
-            _reg_tuples[region]->setVariableValue("unc_vtx_pos_track_si0",pos_Si0);
-            _reg_tuples[region]->setVariableValue("unc_vtx_pos_track_si1",pos_Si1);
+            _reg_tuples[region]->setVariableValue("unc_vtx_pos_track_L1",pos_hit_code.at(0) && pos_hit_code.at(1));
+            _reg_tuples[region]->setVariableValue("unc_vtx_pos_track_L2",pos_hit_code.at(2) && pos_hit_code.at(3));
+            _reg_tuples[region]->setVariableValue("unc_vtx_pos_track_L3",pos_hit_code.at(4) && pos_hit_code.at(5));
             _reg_tuples[region]->setVariableValue("unc_vtx_pos_track_L1_isolation", pos_trk_iso_L1);
 
             //clust vars
