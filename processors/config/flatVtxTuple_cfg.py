@@ -74,12 +74,6 @@ elif (options.isData == 0):
 else:
     print("Specify which type of ntuple you are running on: -t 1 [for Data] / -t 0 [for MC]")
 
-
-vtxana.parameters["CalTimeOffset"] = CalTimeOffset
-vtxana.parameters["eleTrackTimeBias"] = eleTrackTimeBias
-vtxana.parameters["posTrackTimeBias"] = posTrackTimeBias
-
-
 #Region definitions
 
 RegionPath = os.environ['HPSTR_BASE']+"/analysis/selections/"
@@ -90,6 +84,20 @@ if (options.year == 2021):
         vtxana.parameters["regionDefinitions"] = [RegionPath+'preselectionCuts/preselection_cuts.json', RegionPath+'preselectionCuts/all_but_time_cuts.json', RegionPath+'empty.json']
     elif (options.isData == 0):
         vtxana.parameters["regionDefinitions"] = [RegionPath+'preselectionCuts/MC/preselection_cuts.json', RegionPath+'preselectionCuts/all_but_time_cuts.json', RegionPath+'empty.json']
+if (options.year == 2016):
+    CalTimeOffset = 56.3
+    eleTrackTimeBias = -1.6
+    posTrackTimeBias = -1.6
+    vtxana.parameters["v0ProjectionFitsCfg"] = ""
+    vtxana.parameters["year"] = 2016
+    vtxana.parameters["trkColl"] = ""
+    vtxana.parameters["regionDefinitions"] = [RegionPath+'simps/vertexSelection_2016_simp_preselection.json', RegionPath+'simps/vertexSelection_2016_simp_nocuts.json']
+
+
+vtxana.parameters["CalTimeOffset"] = CalTimeOffset
+vtxana.parameters["eleTrackTimeBias"] = eleTrackTimeBias
+vtxana.parameters["posTrackTimeBias"] = posTrackTimeBias
+
 # Sequence which the processors will run.
 p.sequence = [vtxana]
 

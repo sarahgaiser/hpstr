@@ -113,6 +113,7 @@ class FlatVertexProcessor : public Processor {
         std::string ecalColl_{"RecoEcalClusters"}; //!< description
         std::string mcColl_{"MCParticle"}; //!< description
         std::string trkColl_{"KalmanFullTracks"}; //!< description
+        // std::string trkColl_{""}; //!< description
         int isRadPDG_{622}; //!< description
         int makeFlatTuple_{0}; //!< make true in config to save flat tuple
         TTree* tree_{nullptr}; //!< description
@@ -146,6 +147,7 @@ class FlatVertexProcessor : public Processor {
 
         double bFieldScaleFactor_ = -1;
         int current_run_number_{-999}; //!< track current run number
+        int year_{2021};
 };
 
 #endif

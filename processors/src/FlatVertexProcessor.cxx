@@ -245,7 +245,7 @@ void FlatVertexProcessor::initialize(TTree* tree) {
         tree_->SetBranchAddress(mcColl_.c_str(), &mcParts_, &bmcParts_);
     }
 
-    if (!trkColl_.empty()) {
+    if (year_ > 2016 && !trkColl_.empty()) {
         tree_->SetBranchAddress(trkColl_.c_str(),&trks_, &btrks_);
     }
     if (not pSmearingFile_.empty()) {
@@ -267,8 +267,10 @@ bool FlatVertexProcessor::process(IEvent* ievent) {
     int run_number = evth_->getRunNumber();
     int closest_run;
     if (debug_) std::cout << "Check pbc_configs" << std::endl;
-    if (!bpc_configs_.empty()) {
-        for (auto run : bpc_configs_.items()){
+    
+    
+    if (!v0proj_fits_.empty()) {
+        for (auto run : v0proj_fits_.items()){
             int check_run = std::stoi(run.key());
             if (check_run > run_number) {
                 break;
@@ -276,9 +278,9 @@ bool FlatVertexProcessor::process(IEvent* ievent) {
                 closest_run = check_run;
             }
         }
-        beamPosCorrections_ = {bpc_configs_[std::to_string(closest_run)]["beamspot_x"], 
-                               bpc_configs_[std::to_string(closest_run)]["beamspot_y"],
-                               bpc_configs_[std::to_string(closest_run)]["beamspot_z"]};
+        beamPosCorrections_ = {v0proj_fits_[std::to_string(closest_run)]["rotated_mean_x"], 
+                               v0proj_fits_[std::to_string(closest_run)]["rotated_mean_y"],
+                               v0proj_fits_[std::to_string(closest_run)]["target_position"]};
     }
 
 
@@ -357,7 +359,7 @@ bool FlatVertexProcessor::process(IEvent* ievent) {
         Track* ele_trk_ptr;
         Track* pos_trk_ptr;
 	
-        if (!trkColl_.empty()) {
+        if (year_ > 2016 && !trkColl_.empty()) {
             bool foundTracks = _ah->MatchToGBLTracks((ele->getTrack()).getID(),(pos->getTrack()).getID(),
                     ele_trk_ptr, pos_trk_ptr, *trks_);
 
@@ -616,7 +618,7 @@ bool FlatVertexProcessor::process(IEvent* ievent) {
             Track ele_trk;
             Track pos_trk;
       
-            if (!trkColl_.empty()) {
+            if (year_ > 2016 && !trkColl_.empty()) {
                 bool foundTracks = _ah->MatchToGBLTracks((ele->getTrack()).getID(),(pos->getTrack()).getID(),
                         ele_trk_ptr, pos_trk_ptr, *trks_);
 
@@ -785,7 +787,10 @@ bool FlatVertexProcessor::process(IEvent* ievent) {
                 continue;
 
             // Ele Track-Cluster Time Difference
-            if (!_reg_vtx_selectors[region]->passCutLt("eleTrkCluTimeDiff_lt", fabs(corr_eleTrackTime - corr_posClusterTime), weight))
+            if (year_ > 2016 && !_reg_vtx_selectors[region]->passCutLt("eleTrkCluTimeDiff_lt", fabs(corr_eleTrackTime - corr_posClusterTime), weight))
+                continue;
+
+            if (year_ == 2016 && !_reg_vtx_selectors[region]->passCutLt("eleTrkCluTimeDiff_lt", fabs(corr_eleTrackTime - corr_eleClusterTime), weight))
                 continue;
 
             // Pos Track-Cluster Time Difference
@@ -1062,7 +1067,7 @@ bool FlatVertexProcessor::process(IEvent* ievent) {
             Track* ele_trk_ptr;
             Track* pos_trk_ptr;
         
-            if (!trkColl_.empty()) {
+            if (year_ > 2016 && !trkColl_.empty()) {
                 bool foundTracks = _ah->MatchToGBLTracks((ele->getTrack()).getID(),(pos->getTrack()).getID(),
                         ele_trk_ptr, pos_trk_ptr, *trks_);
 
@@ -1223,14 +1228,14 @@ bool FlatVertexProcessor::process(IEvent* ievent) {
             int momPDG_pos = -999;
             int originPDG_ele = -999;
             int originPDG_pos = -999;
-	    TLorentzVector p_ele_true;
+	        TLorentzVector p_ele_true;
             p_ele_true.SetPxPyPzE(-999., -999., -999., -999.);
-	    TLorentzVector p_pos_true;
+	        TLorentzVector p_pos_true;
             p_pos_true.SetPxPyPzE(-999., -999., -999., -999.);
 
-	    float Psum_true = -999;
-	    float Esum_true = -999;
-	    float invM_true = -999;
+            float Psum_true = -999;
+            float Esum_true = -999;
+            float invM_true = -999;
 	    
             if (mcParts_) {
                 float E_ele_true = -1;
@@ -1240,7 +1245,7 @@ bool FlatVertexProcessor::process(IEvent* ievent) {
                     int momPDG = mcParts_->at(i)->getMomPDG();
                     if (mcParts_->at(i)->getPDG() == 11 && momPDG == isRadPDG_)
                     {
-			momPDG_ele = momPDG;
+                        momPDG_ele = momPDG;
                         //originPDG_ele = originPDG;
                         std::vector<double> lP = mcParts_->at(i)->getMomentum();
                         p_ele_true.SetPxPyPzE(lP[0],lP[1],lP[2], mcParts_->at(i)->getEnergy());
@@ -1248,7 +1253,7 @@ bool FlatVertexProcessor::process(IEvent* ievent) {
                     }
                     if (mcParts_->at(i)->getPDG() == -11 && momPDG == isRadPDG_)
                     {
-			momPDG_pos = momPDG;
+                        momPDG_pos = momPDG;
                         //originPDG_pos = originPDG;
                         std::vector<double> lP = mcParts_->at(i)->getMomentum();
                         p_pos_true.SetPxPyPzE(lP[0],lP[1],lP[2], mcParts_->at(i)->getEnergy());
@@ -1317,7 +1322,13 @@ bool FlatVertexProcessor::process(IEvent* ievent) {
             _reg_tuples[region]->setVariableValue("unc_vtx_ele_track_tanLambda", ele_trk.getTanLambda());
             _reg_tuples[region]->setVariableValue("unc_vtx_ele_track_z0", ele_trk.getZ0());
             _reg_tuples[region]->setVariableValue("unc_vtx_ele_track_chi2ndf", ele_trk.getChi2Ndf());
-            _reg_tuples[region]->setVariableValue("unc_vtx_ele_track_clust_dt", corr_eleTrackTime - corr_posClusterTime);
+            if (year_ > 2016) {
+                _reg_tuples[region]->setVariableValue("unc_vtx_ele_track_clust_dt", corr_eleTrackTime - corr_posClusterTime);
+            }
+            else {
+                _reg_tuples[region]->setVariableValue("unc_vtx_ele_track_clust_dt", corr_eleTrackTime - corr_eleClusterTime);
+            }
+            _reg_tuples[region]->setVariableValue("unc_vtx_pos_track_clust_dt", corr_posTrackTime - corr_posClusterTime);
             _reg_tuples[region]->setVariableValue("unc_vtx_ele_track_z0Err",ele_trk.getZ0Err());
             _reg_tuples[region]->setVariableValue("unc_vtx_ele_track_d0Err", ele_trk.getD0Err());
             _reg_tuples[region]->setVariableValue("unc_vtx_ele_track_tanLambdaErr", ele_trk.getTanLambdaErr());
@@ -1338,6 +1349,12 @@ bool FlatVertexProcessor::process(IEvent* ievent) {
             _reg_tuples[region]->setVariableValue("unc_vtx_pos_track_tanLambda", pos_trk.getTanLambda());
             _reg_tuples[region]->setVariableValue("unc_vtx_pos_track_z0", pos_trk.getZ0());
             _reg_tuples[region]->setVariableValue("unc_vtx_pos_track_chi2ndf", pos_trk.getChi2Ndf());
+            if (year_ > 2016) {
+                _reg_tuples[region]->setVariableValue("unc_vtx_ele_track_clust_dt", corr_eleTrackTime - corr_posClusterTime);
+            }
+            else {
+                _reg_tuples[region]->setVariableValue("unc_vtx_ele_track_clust_dt", corr_eleTrackTime - corr_eleClusterTime);
+            }
             _reg_tuples[region]->setVariableValue("unc_vtx_pos_track_clust_dt", corr_posTrackTime - corr_posClusterTime);
             _reg_tuples[region]->setVariableValue("unc_vtx_pos_track_z0Err",pos_trk.getZ0Err());
             _reg_tuples[region]->setVariableValue("unc_vtx_pos_track_d0Err", pos_trk.getD0Err());
