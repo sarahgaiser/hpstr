@@ -352,28 +352,29 @@ bool FlatVertexProcessor::process(IEvent* ievent) {
         }
 
         if (debug_) std::cout << "got parts" << std::endl;
-        // Track ele_trk = ele->getTrack();
-        // Track pos_trk = pos->getTrack();
-        Track ele_trk;
-        Track pos_trk;
-        Track* ele_trk_ptr;
-        Track* pos_trk_ptr;
+        Track ele_trk = ele->getTrack();
+        Track pos_trk = pos->getTrack();
+       
+        // Track ele_trk;
+        // Track pos_trk;
+        // Track* ele_trk_ptr;
+        // Track* pos_trk_ptr;
 	
-        if (year_ > 2016 && !trkColl_.empty()) {
-            bool foundTracks = _ah->MatchToGBLTracks((ele->getTrack()).getID(),(pos->getTrack()).getID(),
-                    ele_trk_ptr, pos_trk_ptr, *trks_);
+        // if (year_ > 2016 && !trkColl_.empty()) {
+        //     bool foundTracks = _ah->MatchToGBLTracks((ele->getTrack()).getID(),(pos->getTrack()).getID(),
+        //             ele_trk_ptr, pos_trk_ptr, *trks_);
 
-            if (!foundTracks) {
-                if(debug_) std::cout<<"VertexAnaProcessor::ERROR couldn't find ele/pos in the GBLTracks collection"<<std::endl;
-                continue;
-            }
-            ele_trk = *ele_trk_ptr;
-            pos_trk = *pos_trk_ptr;
-        }
-        else {
-            ele_trk = ele->getTrack();
-            pos_trk = pos->getTrack();
-        }
+        //     if (!foundTracks) {
+        //         if(debug_) std::cout<<"VertexAnaProcessor::ERROR couldn't find ele/pos in the GBLTracks collection"<<std::endl;
+        //         continue;
+        //     }
+        //     ele_trk = *ele_trk_ptr;
+        //     pos_trk = *pos_trk_ptr;
+        // }
+        // else {
+        //     ele_trk = ele->getTrack();
+        //     pos_trk = pos->getTrack();
+        // }
 
         if (debug_) {
             std::cout << "Check Ele/Pos Track momenta" << std::endl;
@@ -424,13 +425,15 @@ bool FlatVertexProcessor::process(IEvent* ievent) {
         CalCluster posClus = pos->getCluster();
 
         // Compute analysis variables here.
-        TLorentzVector p_ele;
-        p_ele.SetPxPyPzE(ele_trk.getMomentum()[0], ele_trk.getMomentum()[1],
-                         ele_trk.getMomentum()[2], ele->getEnergy());
-        TLorentzVector p_pos;
-        p_pos.SetPxPyPzE(pos_trk.getMomentum()[0], pos_trk.getMomentum()[1],
-                         pos_trk.getMomentum()[2], ele->getEnergy());
+        ROOT::Math::PxPyPzEVector p_ele(ele_trk.getMomentum()[0],
+                                        ele_trk.getMomentum()[1],
+                                        ele_trk.getMomentum()[2], 
+                                        ele->getEnergy());
 
+        ROOT::Math::PxPyPzEVector p_pos(pos_trk.getMomentum()[0],
+                                        pos_trk.getMomentum()[1],
+                                        pos_trk.getMomentum()[2],
+                                        pos->getEnergy());
 
         if (debug_) std::cout << "start selection" << std::endl;
         // Ele Track Time
@@ -484,19 +487,19 @@ bool FlatVertexProcessor::process(IEvent* ievent) {
         if (!vtxSelector->passCutLt("posTrkCluTimeDiff_lt", fabs(corr_posClusterTime - corr_posClusterTime), weight))
             continue;
 
-	// Ele Pos Track Time Difference
+        // Ele Pos Track Time Difference
         if (!vtxSelector->passCutLt("eleposTrkTimeDiff_lt", fabs(corr_eleTrackTime - corr_posTrackTime), weight))
             continue;
 
-        TVector3 ele_mom;
-        ele_mom.SetX(ele_trk.getMomentum()[0]);
-        ele_mom.SetY(ele_trk.getMomentum()[1]);
-        ele_mom.SetZ(ele_trk.getMomentum()[2]);
+        // TVector3 ele_mom;
+        // ele_mom.SetX(ele_trk.getMomentum()[0]);
+        // ele_mom.SetY(ele_trk.getMomentum()[1]);
+        // ele_mom.SetZ(ele_trk.getMomentum()[2]);
 
-        TVector3 pos_mom;
-        pos_mom.SetX(pos_trk.getMomentum()[0]);
-        pos_mom.SetY(pos_trk.getMomentum()[1]);
-        pos_mom.SetZ(pos_trk.getMomentum()[2]);
+        // TVector3 pos_mom;
+        // pos_mom.SetX(pos_trk.getMomentum()[0]);
+        // pos_mom.SetY(pos_trk.getMomentum()[1]);
+        // pos_mom.SetZ(pos_trk.getMomentum()[2]);
 
         // Ele Track Quality - Chi2
         if (!vtxSelector->passCutLt("eleTrkChi2_lt", ele_trk.getChi2(), weight))
@@ -515,15 +518,15 @@ bool FlatVertexProcessor::process(IEvent* ievent) {
             continue;
 
         // Beam Electron cut
-        if (!vtxSelector->passCutLt("eleMom_lt", ele_mom.Mag(), weight))
+        if (!vtxSelector->passCutLt("eleMom_lt", p_ele.P(), weight))
             continue;
 
         // Ele min momentum cut
-        if (!vtxSelector->passCutGt("eleMom_gt", ele_mom.Mag(), weight))
+        if (!vtxSelector->passCutGt("eleMom_gt", p_ele.P(), weight))
             continue;
 
         // Pos min momentum cut
-        if (!vtxSelector->passCutGt("posMom_gt", pos_mom.Mag(), weight))
+        if (!vtxSelector->passCutGt("posMom_gt", p_pos.P(), weight))
             continue;
 
         // Ele nHits
@@ -558,11 +561,11 @@ bool FlatVertexProcessor::process(IEvent* ievent) {
             continue;
 
         // Max vtx momentum
-        if (!vtxSelector->passCutLt("maxVtxMom_lt", (ele_mom+pos_mom).Mag(), weight))
+        if (!vtxSelector->passCutLt("maxVtxMom_lt", (p_ele + p_pos).P(), weight))
             continue;
 
         // Min vtx momentum
-        if (!vtxSelector->passCutGt("minVtxMom_gt", (ele_mom+pos_mom).Mag(), weight))
+        if (!vtxSelector->passCutGt("minVtxMom_gt", (p_ele + p_pos).P(), weight))
             continue;
 
         passVtxPresel = true;
@@ -611,28 +614,8 @@ bool FlatVertexProcessor::process(IEvent* ievent) {
 
             //Compute analysis variables here.
 
-            // Track ele_trk = ele->getTrack();
-            // Track pos_trk = pos->getTrack();
-            Track* ele_trk_ptr;
-            Track* pos_trk_ptr;
-            Track ele_trk;
-            Track pos_trk;
-      
-            if (year_ > 2016 && !trkColl_.empty()) {
-                bool foundTracks = _ah->MatchToGBLTracks((ele->getTrack()).getID(),(pos->getTrack()).getID(),
-                        ele_trk_ptr, pos_trk_ptr, *trks_);
-
-                if (!foundTracks) {
-                    if(debug_) std::cout<<"VertexAnaProcessor::ERROR couldn't find ele/pos in the GBLTracks collection"<<std::endl;
-                    continue;
-                }
-                ele_trk = *ele_trk_ptr;
-                pos_trk = *pos_trk_ptr;
-            }
-            else {
-                ele_trk = ele->getTrack();
-                pos_trk = pos->getTrack();
-            }
+            Track ele_trk = ele->getTrack();
+            Track pos_trk = pos->getTrack();
 
             //Beam Position Corrections
             ele_trk.applyCorrection("z0", beamPosCorrections_.at(1));
@@ -662,10 +645,15 @@ bool FlatVertexProcessor::process(IEvent* ievent) {
             }
 
             TVector3 recEleP(ele->getMomentum()[0], ele->getMomentum()[1], ele->getMomentum()[2]);
-            TLorentzVector p_ele;
-            p_ele.SetPxPyPzE(ele_trk.getMomentum()[0], ele_trk.getMomentum()[1], ele_trk.getMomentum()[2], ele_E);
-            TLorentzVector p_pos;
-            p_pos.SetPxPyPzE(pos_trk.getMomentum()[0], pos_trk.getMomentum()[1], pos_trk.getMomentum()[2], pos_E);
+
+            ROOT::Math::PxPyPzEVector p_ele(ele_trk.getMomentum()[0],
+                                            ele_trk.getMomentum()[1],
+                                            ele_trk.getMomentum()[2], 
+                                            ele_E);
+            ROOT::Math::PxPyPzEVector p_pos(pos_trk.getMomentum()[0],
+                                            pos_trk.getMomentum()[1],
+                                            pos_trk.getMomentum()[2],
+                                            pos_E);
 
             // Get the layers hit on each track
             std::vector<int> ele_hit_layers = ele_trk.getHitLayers();
@@ -693,8 +681,8 @@ bool FlatVertexProcessor::process(IEvent* ievent) {
             }
 
             // Defining these here so they are in scope elsewhere
-            TLorentzVector trueEleP;
-            TLorentzVector truePosP;
+            ROOT::Math::PxPyPzEVector trueEleP(-999, -999, -999, -999);
+            ROOT::Math::PxPyPzEVector truePosP(-999, -999, -999, -999);
 
             if (debug_) {
                 std::cout << "Check on ele_Track" << std::endl;
@@ -801,15 +789,15 @@ bool FlatVertexProcessor::process(IEvent* ievent) {
             if (!_reg_vtx_selectors[region]->passCutLt("eleposTrkTimeDiff_lt", fabs(corr_eleTrackTime - corr_posTrackTime), weight))
                 continue;
 
-            TVector3 ele_mom;
-            ele_mom.SetX(ele_trk.getMomentum()[0]);
-            ele_mom.SetY(ele_trk.getMomentum()[1]);
-            ele_mom.SetZ(ele_trk.getMomentum()[2]);
+            // TVector3 ele_mom;
+            // ele_mom.SetX(ele_trk.getMomentum()[0]);
+            // ele_mom.SetY(ele_trk.getMomentum()[1]);
+            // ele_mom.SetZ(ele_trk.getMomentum()[2]);
 
-            TVector3 pos_mom;
-            pos_mom.SetX(pos_trk.getMomentum()[0]);
-            pos_mom.SetY(pos_trk.getMomentum()[1]);
-            pos_mom.SetZ(pos_trk.getMomentum()[2]);
+            // TVector3 pos_mom;
+            // pos_mom.SetX(pos_trk.getMomentum()[0]);
+            // pos_mom.SetY(pos_trk.getMomentum()[1]);
+            // pos_mom.SetZ(pos_trk.getMomentum()[2]);
 
             // Ele Track Quality - Chi2
             if (!_reg_vtx_selectors[region]->passCutLt("eleTrkChi2_lt", ele_trk.getChi2(), weight))
@@ -828,15 +816,15 @@ bool FlatVertexProcessor::process(IEvent* ievent) {
                 continue;
 
             // Beam Electron cut
-            if (!_reg_vtx_selectors[region]->passCutLt("eleMom_lt", ele_mom.Mag(), weight))
+            if (!_reg_vtx_selectors[region]->passCutLt("eleMom_lt", p_ele.P(), weight))
                 continue;
 
             // Ele min momentum cut
-            if (!_reg_vtx_selectors[region]->passCutGt("eleMom_gt", ele_mom.Mag(), weight))
+            if (!_reg_vtx_selectors[region]->passCutGt("eleMom_gt", p_ele.P(), weight))
                 continue;
 
             // Pos min momentum cut
-            if (!_reg_vtx_selectors[region]->passCutGt("posMom_gt", pos_mom.Mag(), weight))
+            if (!_reg_vtx_selectors[region]->passCutGt("posMom_gt", p_pos.P(), weight))
                 continue;
 
             // Ele nHits
@@ -871,11 +859,11 @@ bool FlatVertexProcessor::process(IEvent* ievent) {
                 continue;
 
             // Max vtx momentum
-            if (!_reg_vtx_selectors[region]->passCutLt("maxVtxMom_lt", (ele_mom + pos_mom).Mag(), weight))
+            if (!_reg_vtx_selectors[region]->passCutLt("maxVtxMom_lt", (p_ele + p_pos).P(), weight))
                 continue;
 
             // Min vtx momentum
-            if (!_reg_vtx_selectors[region]->passCutGt("minVtxMom_gt", (ele_mom + pos_mom).Mag(), weight))
+            if (!_reg_vtx_selectors[region]->passCutGt("minVtxMom_gt", (p_ele + p_pos).P(), weight))
                 continue;
 
             // END PRESELECTION CUTS
@@ -981,10 +969,6 @@ bool FlatVertexProcessor::process(IEvent* ievent) {
                 int isRadEle = -999;
                 int isRecEle = -999;
 
-
-                trueEleP.SetPxPyPzE(-999,-999,-999,-999);
-                truePosP.SetPxPyPzE(-999,-999,-999,-999);
-
                 if (mcParts_) {
                     float trueEleE = -1;
                     float truePosE = -1;
@@ -1006,7 +990,7 @@ bool FlatVertexProcessor::process(IEvent* ievent) {
                         if (trueEleP.X() != -999 && truePosP.X() != -999){
                             truePsum = trueEleP.P() + truePosP.P();
                             trueEsum = trueEleE + truePosE;
-			    trueInvM = (trueEleP + truePosP).Mag();
+			                trueInvM = (trueEleP + truePosP).mag();
                         }
 
                         if (mcParts_->at(i)->getID() != maxID) continue;
@@ -1058,31 +1042,9 @@ bool FlatVertexProcessor::process(IEvent* ievent) {
             double pos_E = pos->getEnergy();
 
             //Compute analysis variables here.
-            // Track ele_trk = ele->getTrack();
-            // Track pos_trk = pos->getTrack();
-            //Get the shared info - TODO change and improve
+            Track ele_trk = ele->getTrack();
+            Track pos_trk = pos->getTrack();
 
-            Track ele_trk;
-            Track pos_trk;
-            Track* ele_trk_ptr;
-            Track* pos_trk_ptr;
-        
-            if (year_ > 2016 && !trkColl_.empty()) {
-                bool foundTracks = _ah->MatchToGBLTracks((ele->getTrack()).getID(),(pos->getTrack()).getID(),
-                        ele_trk_ptr, pos_trk_ptr, *trks_);
-
-                if (!foundTracks) {
-                    if(debug_) std::cout<<"VertexAnaProcessor::ERROR couldn't find ele/pos in the GBLTracks collection"<<std::endl;
-                    continue;
-                }
-                ele_trk = *ele_trk_ptr;
-                pos_trk = *pos_trk_ptr;
-            }
-            else {
-                ele_trk = ele->getTrack();
-                pos_trk = pos->getTrack();
-            }
-            
             //Track Time Corrections
             double corr_eleTrackTime = ele_trk.getTrackTime() + eleTrackTimeBias_;
             double corr_posTrackTime = pos_trk.getTrackTime() + posTrackTimeBias_;
@@ -1155,14 +1117,27 @@ bool FlatVertexProcessor::process(IEvent* ievent) {
             // Only calculate isolations if both track L1 and L2 hits exist
             bool hasL1ele = false;
             bool hasL2ele = false;
-            _ah->InnermostLayerCheck(&ele_trk, hasL1ele, hasL2ele);
+            // _ah->InnermostLayerCheck(&ele_trk, hasL1ele, hasL2ele);
+            if (ele_hit_code.at(0) == 1 && ele_hit_code.at(1) == 1) {
+                hasL1ele = true;
+            }
+            if (ele_hit_code.at(2) == 1 && ele_hit_code.at(3) == 1) {
+                hasL2ele = true;
+            }
 
             bool hasL1pos = false;
             bool hasL2pos = false;
-            _ah->InnermostLayerCheck(&pos_trk, hasL1pos, hasL2pos);
+            // _ah->InnermostLayerCheck(&pos_trk, hasL1pos, hasL2pos);
+            if (pos_hit_code.at(0) == 1 && pos_hit_code.at(1) == 1) {
+                hasL1pos = true;
+            }
+            if (pos_hit_code.at(2) == 1 && pos_hit_code.at(3) == 1) {
+                hasL2pos = true;
+            }
 
             double ele_trk_iso_L1 = 99999.9;
             double pos_trk_iso_L1 = 99999.9;
+            
             if(hasL1ele && hasL2ele && hasL1pos && hasL2pos){
                 if (ele_trk.isKalmanTrack()){
                     ele_trk_iso_L1 = utils::getKalmanTrackL1Isolations(&ele_trk, hits_);
@@ -1170,17 +1145,15 @@ bool FlatVertexProcessor::process(IEvent* ievent) {
                 }
             }
 
-            TVector3 ele_mom;
-            ele_mom.SetX(ele_trk.getMomentum()[0]);
-            ele_mom.SetY(ele_trk.getMomentum()[1]);
-            ele_mom.SetZ(ele_trk.getMomentum()[2]);
+            // TVector3 ele_mom;
+            // ele_mom.SetX(ele_trk.getMomentum()[0]);
+            // ele_mom.SetY(ele_trk.getMomentum()[1]);
+            // ele_mom.SetZ(ele_trk.getMomentum()[2]);
 
-            TVector3 pos_mom;
-            pos_mom.SetX(pos_trk.getMomentum()[0]);
-            pos_mom.SetY(pos_trk.getMomentum()[1]);
-            pos_mom.SetZ(pos_trk.getMomentum()[2]);
-
-            double psum = ele_mom.Mag()+pos_mom.Mag();
+            // TVector3 pos_mom;
+            // pos_mom.SetX(pos_trk.getMomentum()[0]);
+            // pos_mom.SetY(pos_trk.getMomentum()[1]);
+            // pos_mom.SetZ(pos_trk.getMomentum()[2]);
 
             // Ele nHits
             int ele2dHits = ele_trk.getTrackerHitCount();
@@ -1191,10 +1164,18 @@ bool FlatVertexProcessor::process(IEvent* ievent) {
             int pos2dHits = pos_trk.getTrackerHitCount();
 
             TVector3 recEleP(ele->getMomentum()[0], ele->getMomentum()[1], ele->getMomentum()[2]);
-            TLorentzVector p_ele;
-            p_ele.SetPxPyPzE(ele_trk.getMomentum()[0], ele_trk.getMomentum()[1], ele_trk.getMomentum()[2], ele_E);
-            TLorentzVector p_pos;
-            p_pos.SetPxPyPzE(pos_trk.getMomentum()[0], pos_trk.getMomentum()[1], pos_trk.getMomentum()[2], pos_E);
+
+            ROOT::Math::PxPyPzEVector p_ele(ele_trk.getMomentum()[0],
+                                            ele_trk.getMomentum()[1],
+                                            ele_trk.getMomentum()[2], 
+                                            ele_E);
+
+            ROOT::Math::PxPyPzEVector p_pos(pos_trk.getMomentum()[0],
+                                            pos_trk.getMomentum()[1],
+                                            pos_trk.getMomentum()[2],
+                                            pos_E);
+
+            double psum = p_ele.P()+p_pos.P();
 
             double reconz = vtx->getZ(); 
             double ele_trk_z0 = ele_trk.getZ0();
@@ -1228,10 +1209,8 @@ bool FlatVertexProcessor::process(IEvent* ievent) {
             int momPDG_pos = -999;
             int originPDG_ele = -999;
             int originPDG_pos = -999;
-	        TLorentzVector p_ele_true;
-            p_ele_true.SetPxPyPzE(-999., -999., -999., -999.);
-	        TLorentzVector p_pos_true;
-            p_pos_true.SetPxPyPzE(-999., -999., -999., -999.);
+	        ROOT::Math::PxPyPzEVector p_ele_true(-999., -999., -999., -999.);
+	        ROOT::Math::PxPyPzEVector p_pos_true(-999., -999., -999., -999.);
 
             float Psum_true = -999;
             float Esum_true = -999;
@@ -1262,13 +1241,12 @@ bool FlatVertexProcessor::process(IEvent* ievent) {
                     if (p_pos_true.X() != -999 && p_pos_true.X() != -999){
                         Psum_true = p_ele_true.P() + p_pos_true.P();
                         Esum_true = E_ele_true + E_pos_true;
-                        invM_true = (p_ele_true + p_pos_true).Mag();
+                        invM_true = (p_ele_true + p_pos_true).mag();
                     }
 
                     //if (mcParts_->at(i)->getID() != maxID) continue;
                 }
             }
-
 
             // Just for the selected vertex
             if (!isData_){
@@ -1285,15 +1263,15 @@ bool FlatVertexProcessor::process(IEvent* ievent) {
                 _reg_tuples[region]->setVariableValue("momPDG_pos", int(momPDG_pos));
                 _reg_tuples[region]->setVariableValue("originPDG_ele", int(originPDG_ele));
                 _reg_tuples[region]->setVariableValue("originPDG_pos", int(originPDG_pos));
-		_reg_tuples[region]->setVariableValue("unc_vtx_psum_true", Psum_true);
-		_reg_tuples[region]->setVariableValue("unc_vtx_mass_true", invM_true);
+                _reg_tuples[region]->setVariableValue("unc_vtx_psum_true", Psum_true);
+                _reg_tuples[region]->setVariableValue("unc_vtx_mass_true", invM_true);
             }
 
             _reg_tuples[region]->setVariableValue("unc_vtx_mass", vtx->getInvMass());
             _reg_tuples[region]->setVariableValue("unc_vtx_z"   , vtxPosSvt.Z());
             _reg_tuples[region]->setVariableValue("unc_vtx_chi2", vtx->getChi2());
             _reg_tuples[region]->setVariableValue("unc_vtx_psum", p_ele.P() + p_pos.P());
-	    _reg_tuples[region]->setVariableValue("unc_vtx_px", vtx->getP().X());
+            _reg_tuples[region]->setVariableValue("unc_vtx_px", vtx->getP().X());
             _reg_tuples[region]->setVariableValue("unc_vtx_py", vtx->getP().Y());
             _reg_tuples[region]->setVariableValue("unc_vtx_pz", vtx->getP().Z());
             _reg_tuples[region]->setVariableValue("unc_vtx_x", vtx->getX());
