@@ -611,7 +611,9 @@ double utils::getKalmanTrackL1Isolations(Track* track, std::vector<TrackerHit*>*
     double L1_axial_iso = 999999.9;
     double L1_stereo_iso = 999999.9;
     //Loop over hits on track
+    // std::cout << "calculating isolation, nhits: " << track->getSvtHits().GetEntries() << std::endl;
     for(int i = 0; i < track->getSvtHits().GetEntries(); i++){
+        // std::cout << "svt hit loop" << std::endl;
         TrackerHit* track_hit = (TrackerHit*)track->getSvtHits().At(i);
         //Track hit info
         int trackhit_id = track_hit->getID();
@@ -658,6 +660,7 @@ double utils::getKalmanTrackL1Isolations(Track* track, std::vector<TrackerHit*>*
             return isohit_dy;
         }
         for(int j = 0; j < siClusters->size(); j++){
+            // std::cout << "inside cluster loop" << std::endl;
             TrackerHit* althit = siClusters->at(j);
             int althit_id = althit->getID();
             int althit_volume = althit->getVolume();
@@ -706,6 +709,7 @@ double utils::getKalmanTrackL1Isolations(Track* track, std::vector<TrackerHit*>*
                 closest_dcharge = trackhit_charge - althit_charge;
                 closest_dt = trackhit_time - althit_time;
                 isohit_y = althit_y;
+                // std::cout << isohit_dy << std::endl;
             }
         }
 

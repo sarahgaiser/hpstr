@@ -172,60 +172,57 @@ bool VertexProcessor::process(IEvent* ievent) {
                     }
                     track->setTrackerHitCount(nHits);
                 } 
-                else{
-		    EVENT::TrackerHitVec lc_tracker_hits = lc_track->getTrackerHits();
-		    for (auto lc_tracker_hit : lc_tracker_hits) {
-			TrackerHit* tracker_hit = utils::buildTrackerHit(static_cast<IMPL::TrackerHitImpl*>(lc_tracker_hit),rotateHits,hitType);
-			std::vector<RawSvtHit*> rawSvthitsOn3d;
-			utils::addRawInfoTo3dHit(tracker_hit,static_cast<IMPL::TrackerHitImpl*>(lc_tracker_hit),
-				raw_svt_hit_fits,&rawSvthitsOn3d,hitType);
+                else {
+                    EVENT::TrackerHitVec lc_tracker_hits = lc_track->getTrackerHits();
+                    for (auto lc_tracker_hit : lc_tracker_hits) {
+                        TrackerHit* tracker_hit = utils::buildTrackerHit(static_cast<IMPL::TrackerHitImpl*>(lc_tracker_hit),rotateHits,hitType);
+                        std::vector<RawSvtHit*> rawSvthitsOn3d;
+                        utils::addRawInfoTo3dHit(tracker_hit,static_cast<IMPL::TrackerHitImpl*>(lc_tracker_hit),
+                            raw_svt_hit_fits,&rawSvthitsOn3d,hitType);
 
-			int hitLayer = tracker_hit->getLayer();
-			nHits++;
-			EVENT::LCObjectVec rawHits = lc_tracker_hit->getRawHits();
-			for(int irawhit = 0; irawhit < rawHits.size(); ++irawhit){
-			    IMPL::TrackerHitImpl* rawhit = static_cast<IMPL::TrackerHitImpl*>(rawHits.at(irawhit));
-			    if(debug_ > 0)
-				std::cout << "rawhit on track has lcio id: " << rawhit->id() << std::endl;
+                        int hitLayer = tracker_hit->getLayer();
+                        nHits++;
+                        EVENT::LCObjectVec rawHits = lc_tracker_hit->getRawHits();
+                        for(int irawhit = 0; irawhit < rawHits.size(); ++irawhit){
+                            IMPL::TrackerHitImpl* rawhit = static_cast<IMPL::TrackerHitImpl*>(rawHits.at(irawhit));
+                            if(debug_ > 0)
+                            std::cout << "rawhit on track has lcio id: " << rawhit->id() << std::endl;
 
-			    if (hasMCParts)
-			    {
-				// Get the list of fit params associated with the raw tracker hit
-				EVENT::LCObjectVec lc_simtrackerhits = mcPartRel_nav->getRelatedToObjects(rawhit);
+                            if (hasMCParts) {
+                                // Get the list of fit params associated with the raw tracker hit
+                                EVENT::LCObjectVec lc_simtrackerhits = mcPartRel_nav->getRelatedToObjects(rawhit);
 
-				//Loop over SimTrackerHits to get MCParticles
-				for(int isimhit = 0; isimhit < lc_simtrackerhits.size(); isimhit++){
-				    IMPL::SimTrackerHitImpl* lc_simhit = static_cast<IMPL::SimTrackerHitImpl*>(lc_simtrackerhits.at(isimhit));
-				    IMPL::MCParticleImpl* lc_mcp = static_cast<IMPL::MCParticleImpl*>(lc_simhit->getMCParticle());
-				    if(lc_mcp == nullptr)
-					std::cout << "mcp is null" << std::endl;
-				    track->addMcpHit(hitLayer, lc_mcp->id());
-				    if(debug_ > 0) {
-					std::cout << "simtrackerhit lcio id: " << lc_simhit->id() << std::endl;
-					std::cout << "mcp lcio id: " << lc_mcp->id() << std::endl;
-				    }
-				}
-			    }
-			} // Loop over raw tracker hits
+                                //Loop over SimTrackerHits to get MCParticles
+                                for(int isimhit = 0; isimhit < lc_simtrackerhits.size(); isimhit++){
+                                    IMPL::SimTrackerHitImpl* lc_simhit = static_cast<IMPL::SimTrackerHitImpl*>(lc_simtrackerhits.at(isimhit));
+                                    IMPL::MCParticleImpl* lc_mcp = static_cast<IMPL::MCParticleImpl*>(lc_simhit->getMCParticle());
+                                    if(lc_mcp == nullptr)
+                                    std::cout << "mcp is null" << std::endl;
+                                    track->addMcpHit(hitLayer, lc_mcp->id());
+                                    if(debug_ > 0) {
+                                        std::cout << "simtrackerhit lcio id: " << lc_simhit->id() << std::endl;
+                                        std::cout << "mcp lcio id: " << lc_mcp->id() << std::endl;
+                                    }
+                                }
+                            }
+                        } // Loop over raw tracker hits
 
-			track->addHitLayer(hitLayer);
-			hits_.push_back(tracker_hit);
+                        track->addHitLayer(hitLayer);
+                        track->addHit(tracker_hit);
+                        hits_.push_back(tracker_hit);
                         for (std::vector<RawSvtHit *>::iterator it = rawSvthitsOn3d.begin(); it != rawSvthitsOn3d.end(); ++it) {
-                          delete *it;
+                            delete *it;
                         }
-                        rawSvthitsOn3d.clear();	
-
+                        rawSvthitsOn3d.clear();
                     } // Loop over hits on track
-
                     track->setTrackerHitCount(nHits);
-
                 } // !useTrackerHits
 
                 part->setTrack(track); 
                 delete track;
 
             }
-            // =========================================
+
             if (debug_ > 0) std::cout << "VertexProcessor: Add particle" << std::endl;
             parts_.push_back(part);
             vtx->addParticle(part);
@@ -240,7 +237,6 @@ bool VertexProcessor::process(IEvent* ievent) {
     return true;
 }
 
-void VertexProcessor::finalize() { 
-}
+void VertexProcessor::finalize() {}
 
 DECLARE_PROCESSOR(VertexProcessor); 
