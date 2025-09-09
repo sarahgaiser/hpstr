@@ -1089,7 +1089,7 @@ bool FlatVertexProcessor::process(IEvent* ievent) {
             {
                 int layer = pos_hit_layers.at(i);
                 pos_lastlayer = layer;
-                pos_hit_code.at(i) = 1;
+                pos_hit_code.at(layer) = 1;
             }
 
             // Vertex Covariance
@@ -1193,9 +1193,11 @@ bool FlatVertexProcessor::process(IEvent* ievent) {
             double vtx_proj_y_sig = -999.9;
             double vtx_proj_sig = -999.9;
             if (!v0ProjectionFitsCfg_.empty()) {
+                // vtx_proj_sig = utils::v0_projection_to_target_significance(v0proj_fits_, evth_->getRunNumber(),
+                //         vtx_proj_x, vtx_proj_y, vtx_proj_x_sig, vtx_proj_y_sig, vtx->getX(), vtx->getY(),
+                //         reconz, vtx->getP().X(), vtx->getP().Y(), vtx->getP().Z());
                 vtx_proj_sig = utils::v0_projection_to_target_significance(v0proj_fits_, evth_->getRunNumber(),
-                        vtx_proj_x, vtx_proj_y, vtx_proj_x_sig, vtx_proj_y_sig, vtx->getX(), vtx->getY(),
-                        reconz, vtx->getP().X(), vtx->getP().Y(), vtx->getP().Z());
+                        vtx_proj_x, vtx_proj_y, vtx_proj_x_sig, vtx_proj_y_sig, vtx);
             }
 
             // TODO put this in the Vertex!
@@ -1215,30 +1217,31 @@ bool FlatVertexProcessor::process(IEvent* ievent) {
             float Psum_true = -999;
             float Esum_true = -999;
             float invM_true = -999;
-	    
+	   
             if (mcParts_) {
                 float E_ele_true = -1;
                 float E_pos_true = -1;
                 for (int i = 0; i < mcParts_->size(); i++)
                 {
                     int momPDG = mcParts_->at(i)->getMomPDG();
+		    int originPDG = mcParts_->at(i)->getOriginPDG();
                     if (mcParts_->at(i)->getPDG() == 11 && momPDG == isRadPDG_)
                     {
                         momPDG_ele = momPDG;
-                        //originPDG_ele = originPDG;
-                        std::vector<double> lP = mcParts_->at(i)->getMomentum();
+                        originPDG_ele = originPDG;
+			std::vector<double> lP = mcParts_->at(i)->getMomentum();
                         p_ele_true.SetPxPyPzE(lP[0],lP[1],lP[2], mcParts_->at(i)->getEnergy());
                         E_ele_true = mcParts_->at(i)->getEnergy();
                     }
                     if (mcParts_->at(i)->getPDG() == -11 && momPDG == isRadPDG_)
                     {
                         momPDG_pos = momPDG;
-                        //originPDG_pos = originPDG;
+                        originPDG_pos = originPDG;
                         std::vector<double> lP = mcParts_->at(i)->getMomentum();
                         p_pos_true.SetPxPyPzE(lP[0],lP[1],lP[2], mcParts_->at(i)->getEnergy());
                         E_pos_true = mcParts_->at(i)->getEnergy();
                     }
-                    if (p_pos_true.X() != -999 && p_pos_true.X() != -999){
+                    if (p_pos_true.X() != -999 && p_ele_true.X() != -999){
                         Psum_true = p_ele_true.P() + p_pos_true.P();
                         Esum_true = E_ele_true + E_pos_true;
                         invM_true = (p_ele_true + p_pos_true).mag();

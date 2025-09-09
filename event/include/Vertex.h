@@ -144,17 +144,59 @@ class Vertex : public TObject {
         TVector3 getP        () const {return p_;}
         
         /** Get the Target Constrained Sigma X */
-        double getTgtConstrSigmaX() const {return parameters_[9];}
-        
+        double getTgtConstrSigmaX() const {
+            if (parameters_.size() == 24 || parameters_.size() == 23) {
+                return parameters_[9];
+            }
+            else if (parameters_.size() == 21) {
+                return parameters_[7];
+            }
+            else {
+                return -999.0;
+            }
+        }
+
         /** Get the Target Constrained X */
-        double getTgtConstrX() const {return parameters_[7];}
-        
+        // double getTgtConstrX() const {return parameters_[7];}
+        double getTgtConstrX() const {
+            if (parameters_.size() == 24 || parameters_.size() == 23) {
+                return parameters_[20];
+            }
+            else if (parameters_.size() == 21) {
+                return parameters_[17];
+            }
+            else {
+                return -999.0;
+            }
+        }
+
         /** Get the Target Constrained Sigma Y */
-        double getTgtConstrSigmaY() const {return parameters_[11];}
-        
+        double getTgtConstrSigmaY() const {
+            if (parameters_.size() == 24 || parameters_.size() == 23) {
+                return parameters_[11];
+            }
+            else if (parameters_.size() == 21) {
+                return parameters_[8];
+            }
+            else {
+                return -999.0;
+            }
+        }
+
         /** Get the Target Constrained Y */
-        double getTgtConstrY() const {return parameters_[20];}
-        
+        // double getTgtConstrY() const {return parameters_[20];}
+        double getTgtConstrY() const {
+            if (parameters_.size() == 24 || parameters_.size() == 23) {
+                return parameters_[7];
+            }
+            else if (parameters_.size() == 21) {
+                return parameters_[6];
+            }
+            else {
+                return -999.0;
+            }
+        }
+
         ClassDef(Vertex,1);
 
     private:

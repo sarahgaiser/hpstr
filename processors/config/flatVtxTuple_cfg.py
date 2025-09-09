@@ -46,7 +46,8 @@ vtxana.parameters["analysis"] = "vertex"
 vtxana.parameters["vtxSelectionjson"] = os.environ['HPSTR_BASE'] + '/analysis/selections/empty.json'
 vtxana.parameters["beamE"] = base.beamE[str(options.year)]
 vtxana.parameters["isData"] = options.isData
-vtxana.parameters["isRadPDG"] = 622
+#vtxana.parameters["isRadPDG"] = 622
+vtxana.parameters["isRadPDG"] = 623 #for rad
 vtxana.parameters["makeFlatTuple"] = True
 #vtxana.parameters["v0ProjectionFitsCfg"] = os.environ['HPSTR_BASE'] + "/analysis/data/v0_projection_2021_mc_signal_config.json"
 #vtxana.parameters["beamPosCfg"] = os.environ['HPSTR_BASE'] + "/analysis/data/beamspot_position_2021.json"
@@ -60,15 +61,16 @@ if (options.isData == 1):
     #eleTrackTimeBias = 0.46
     #posTrackTimeBias = 0.46
     CalTimeOffset = 37.3
-    eleTrackTimeBias = 0.2
+    #eleTrackTimeBias = 0.2
+    eleTrackTimeBias = 0.0
     posTrackTimeBias = 0.0
     vtxana.parameters["v0ProjectionFitsCfg"] = os.environ['HPSTR_BASE'] + "/analysis/data/v0_projection_2021_config.json"
     print("Running on data file: Setting CalTimeOffset %d" % CalTimeOffset)
 
 elif (options.isData == 0):
-    CalTimeOffset = 24.
-    eleTrackTimeBias = 35.1 #55 for no spacing
-    posTrackTimeBias = 35.1 #55 for no spacing
+    CalTimeOffset = 37.3#24.
+    eleTrackTimeBias = 0.0 #35.1 #55 for no spacing
+    posTrackTimeBias = 0.0 #35.1 #55 for no spacing
     vtxana.parameters["v0ProjectionFitsCfg"] = os.environ['HPSTR_BASE'] + "/analysis/data/v0_projection_2021_mc_signal_config.json"
     print("Running on MC file: Setting CalTimeOffset %d" % CalTimeOffset)
 else:
